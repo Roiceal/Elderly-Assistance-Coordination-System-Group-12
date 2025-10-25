@@ -2,6 +2,7 @@ body {
  background-image: url("background_image.jpg");
 
 }
+/*login,register, otp border css*/
 .log {
     text-align: center;
     justify-content: center;
@@ -54,3 +55,4 @@ font-weight: medium;
     padding: 30px 20px 30px 20px;
     box-shadow: 1px 1px 5px 1px;
 }
+

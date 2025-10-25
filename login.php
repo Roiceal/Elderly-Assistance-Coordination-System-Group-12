@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Login</title>
 </head>
     <body>
      <div class="log">
@@ -23,7 +23,7 @@
                 <button type="button" onclick="window.location.href='register.php'" class="btn btn-success rounded-pill d-grid gap-2 col-6 mx-auto">Login</button>
            </div>
           <div class="register_link">
-            <p class="text-center">Don't have an account? <a href="register.php">Register here</a></p>
+            <p class="text-center">create account<a href="register.php">Register here</a></p>
           </div>
          </form>
      </div>
