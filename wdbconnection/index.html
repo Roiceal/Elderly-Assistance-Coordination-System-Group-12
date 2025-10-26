@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>RFID Card</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+
+      <div class="card mx-auto" style="width: 18rem;">
+        <img class="card-img-top" alt="image" id="img" src="uploads/default.png">
+        <div class="card-body">
+          <input type="text" id="rfidcard" class="form-control mb-3" placeholder="Tap RFID card here">
+          <p id="name">Name:</p>
+          <p id="address">Address:</p>
+          <p id="age">Age:</p>
+          <p id="DOB">Date of Birth:</p>
+          <p id="card_id">Card ID:</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
