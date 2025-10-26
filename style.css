@@ -1,0 +1,58 @@
+body {
+ background-image: url("background_image.jpg");
+
+}
+/*login,register, otp border css*/
+.log {
+    text-align: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 8px;
+    margin: 120px 500px 100px 500px;
+    padding: 30px 20px 30px 20px;
+    box-shadow: 1px 1px 5px 1px;
+}
+
+.box {
+    padding: 5px 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.button {
+    width: 100%;
+    cursor: pointer;
+    margin-top: 5px; 
+    font-weight: bold;  
+    
+}
+.register {
+    text-align: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 8px;
+    margin: 120px 500px 100px 500px;
+    padding: 30px 20px 30px 20px;
+    box-shadow: 1px 1px 5px 1px;
+}
+.register_link{
+    font-size: small;
+    margin-top: 10px;
+}
+
+label {
+display: block;
+font-weight: medium;
+
+}
+
+.otp {
+    text-align: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 8px;
+    margin: 120px 500px 100px 500px;
+    padding: 30px 20px 30px 20px;
+    box-shadow: 1px 1px 5px 1px;
+}
+
