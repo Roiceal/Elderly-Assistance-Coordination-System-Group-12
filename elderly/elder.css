@@ -30,9 +30,20 @@ body {
       padding: 6px 20px;
     }
 
-    img {
-      height: 200px;
-   }
-   .rows {
-    background-attachment: #bfbfbf;
-   }
+    .complete_profile {
+      text-align: center;
+      justify-content: center;
+      background-color: #fff;
+      border-radius: 8px;
+      margin: 120px 500px 100px 500px;
+      padding: 30px 20px 30px 20px;
+      box-shadow: 1px 1px 5px 1px;
+    }
+
+    box {
+      padding: 5px 5px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+
+     

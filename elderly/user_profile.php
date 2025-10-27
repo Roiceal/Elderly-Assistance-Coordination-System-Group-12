@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
+  <title>User Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
- <link rel="stylesheet" href="elder.css">
+  <link rel="stylesheet" href="elder.css">
 </head>
 <body>
+
 
   <nav class="navbar navbar-expand-lg bg-light fixed-top">
     <div class="container">
@@ -23,13 +24,13 @@
             <a class="nav-link" href="home.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Notification</a>
+            <a class="nav-link" href="notif.php">Notification</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Request Assistance</a>
+            <a class="nav-link" href="request_assistance.php">Request Assistance</a>
           </li>
            <li class="nav-item">
-            <a class="nav-link" href="#">User Profile</a>
+            <a class="nav-link" href="user_profile.php">User Profile</a>
           </li>
         </ul>
 
@@ -38,6 +39,25 @@
     </div>
   </nav>
 
+    <div class="complete_profile">
+        <form action="submit" method="$_POST">
+            <div class="box">
+                <input type="text" name="address" class="form-control rounded-pill" placeholder="Enter your Address">
+            </div>
+            <div class="box">
+                <input type="text" name="gender" class="form-control rounded-pill" placeholder="Type your Gender"> 
+            </div>
+            <div class="box">
+                <input type="text" name="birthday" class="form-control rounded-pill" placeholder="Enter your Birthday">
+            </div>
+            <div class="box">
+                <input type="text" name="rfid_pin" class="form-control rounded-pill" placeholder="Enter RFID Pin">
+            </div>
+            <div class="button">
+                <button type="submit" onclick="window.location.href=''" class="btn btn-success rounded-pill d-grid gap-2 col-6 mx-auto">confirm</button>
+            </div>
+            </form>
+    </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
