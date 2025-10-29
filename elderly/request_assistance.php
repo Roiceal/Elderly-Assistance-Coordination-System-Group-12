@@ -1,3 +1,32 @@
+<?php
+require_once '../database/db_connection.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $database = new Database();
+    $conn = $database->getConnection();
+
+    $fullname = trim($_POST['fullname']);
+    $address = trim($_POST['address']);
+    $contact = trim($_POST['contact']);
+    $type = trim($_POST['type']);
+    $details = trim($_POST['details']);
+
+    $stmt = $conn->prepare("INSERT INTO assistance_request (fullname, address, contact, type, details) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $fullname, $address, $contact, $type, $details);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Your assistance request has been submitted successfully!'); window.location.href='request_assistance.php';</script>";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $database->close();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +37,7 @@
  <link rel="stylesheet" href="elder.css">
 </head>
 <body>
+
 
   <nav class="navbar navbar-expand-lg bg-light fixed-top">
     <div class="container">
@@ -37,6 +67,42 @@
       </div>
     </div>
   </nav>
+
+     <div class="container">
+    <div class="request-form">
+      <h2>Request Assistance</h2>
+      <form action="request_assistance.php" method="POST">
+        <div class="mb-3">
+          <label for="fullname" class="form-label">Full Name</label>
+          <input type="text" name="fullname" id="fullname" class="form-control" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="address" class="form-label">Address</label>
+          <input type="text" name="address" id="address" class="form-control" placeholder="Enter your address" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="contact" class="form-label">Contact Number</label>
+          <input type="tel" name="contact" id="contact" class="form-control" placeholder="Enter your contact number" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="type" class="form-label">Type of Assistance</label>
+          <input type="text" name="type" id="type" class="form-control" placeholder="What type of assistance do you need?" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="details" class="form-label">Description / Details</label>
+          <textarea name="details" id="details" rows="4" class="form-control" placeholder="Describe what kind of help you need..." required></textarea>
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>

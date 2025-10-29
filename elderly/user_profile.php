@@ -40,23 +40,9 @@
   </nav>
 
     <div class="complete_profile">
-        <form action="submit" method="$_POST">
-            <div class="box">
-                <input type="text" name="address" class="form-control rounded-pill" placeholder="Enter your Address">
+        <div class="button">
+                <button type="submit" onclick="window.location.href='edit_profile.php'" class="btn btn-success rounded-pill d-grid gap-2 col-6 mx-auto">Edit Profile</button>
             </div>
-            <div class="box">
-                <input type="text" name="gender" class="form-control rounded-pill" placeholder="Type your Gender"> 
-            </div>
-            <div class="box">
-                <input type="text" name="birthday" class="form-control rounded-pill" placeholder="Enter your Birthday">
-            </div>
-            <div class="box">
-                <input type="text" name="rfid_pin" class="form-control rounded-pill" placeholder="Enter RFID Pin">
-            </div>
-            <div class="button">
-                <button type="submit" onclick="window.location.href=''" class="btn btn-success rounded-pill d-grid gap-2 col-6 mx-auto">confirm</button>
-            </div>
-            </form>
     </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>

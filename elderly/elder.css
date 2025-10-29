@@ -40,10 +40,27 @@ body {
       box-shadow: 1px 1px 5px 1px;
     }
 
-    box {
+    .box {
       padding: 5px 5px;
       margin-left: 20px;
       margin-right: 20px;
     }
 
+     .button {
+    width: 100%;
+    cursor: pointer;
+    margin-top: 5px; 
+    font-weight: bold;  
+     }
+
+     .request-form {
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    
      
