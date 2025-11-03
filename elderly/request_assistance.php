@@ -1,30 +1,31 @@
 <?php
 require_once '../database/db_connection.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $db = new Database();
+    $conn = $db->getConnection();
 
-    $database = new Database();
-    $conn = $database->getConnection();
+    $fullname = $_POST['fullname'];
+    $address = $_POST['address'];
+    $contact = $_POST['contact'];
+    $type = $_POST['type'];
+    $details = $_POST['details'];
 
-    $fullname = trim($_POST['fullname']);
-    $address = trim($_POST['address']);
-    $contact = trim($_POST['contact']);
-    $type = trim($_POST['type']);
-    $details = trim($_POST['details']);
-
-    $stmt = $conn->prepare("INSERT INTO assistance_request (fullname, address, contact, type, details) VALUES (?, ?, ?, ?, ?)");
+    // Call the stored procedure
+    $stmt = $conn->prepare("CALL add_assistance_request(?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $fullname, $address, $contact, $type, $details);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Your assistance request has been submitted successfully!'); window.location.href='request_assistance.php';</script>";
+        echo "<script>alert('Request submitted successfully!'); window.location='view_requests.php';</script>";
     } else {
-        echo "Error: " . $stmt->error;
+        echo "<script>alert('Error submitting request.');</script>";
     }
 
     $stmt->close();
-    $database->close();
+    $conn->close();
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -71,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      <div class="container">
     <div class="request-form">
       <h2>Request Assistance</h2>
-      <form action="request_assistance.php" method="POST">
+      <form action="../database/create.php" method="POST">
         <div class="mb-3">
           <label for="fullname" class="form-label">Full Name</label>
           <input type="text" name="fullname" id="fullname" class="form-control" placeholder="Enter your full name" required>

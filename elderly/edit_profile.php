@@ -40,7 +40,7 @@
   </nav>
 
     <div class="complete_profile">
-        <form action="submit" method="$_POST">
+        <form action="user_profile.php" method="$_POST">
             <div class="box">
                 <input type="text" name="address" class="form-control rounded-pill" placeholder="Enter your Address">
             </div>
