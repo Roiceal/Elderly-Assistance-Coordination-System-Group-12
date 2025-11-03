@@ -1,60 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <title>Home</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="elder.css">
 </head>
 <body>
-    
-        <nav class="navbar bg-body-tertiary fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Elderly Assistance Coordination System</a>
-     <ul class="nav justify-content-end">
-    <li class="list-unstyled">
-            <a class="nav-link" href="index.php">Home</a>
-          </li>
-       <li class="list-unstyled">
-            <a class="nav-link" href="#">Notification</a>
-          </li>
-           <li class="list-unstyled">
-            <a class="nav-link" href="#">Request Assistance</a>
-          </li>
-       <li class="list-unstyled">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-    </ul>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasNavbarLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+  <nav class="navbar navbar-expand-lg bg-light fixed-top">
+    <div class="container">
+      <h1 class="navbar-brand fw-bold mb-0">EACS</h1>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Profile</a>
+            <a class="nav-link" href="home.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Settings</a>
+            <a class="nav-link" href="notif.php">Notification</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Logout</a>
+            <a class="nav-link" href="request_assistance.php">Request Assistance</a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" href="user_profile.php">User Profile</a>
           </li>
         </ul>
-        <form class="d-flex mt-3" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+
+        <a class="btn btn-danger" href="logout.php">Logout</a>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
+  <div class="container">
+    <h4>Welcome to</h4>
+    <h2>Elderly Assistance Coordination System</h2>
+    <p class="details">Effective coordination and timely assistance to ensure the elderly members well-being. </p>
+  </div>
+  <a href="notif.php">  
+  <div class=" container-fluid justify-content-center d-flex mx-auto">
+    <div class="card m-3" style="width: 18rem;">
+    <img src="notif.png" class="card-img-top img-fluid" alt="_blank">
+    <div class="card-body">
+        <p class="card-text">Tap to view notification</p>
+     </div>
+    </div>
+  </a> 
+  <a href="request_assistance.php">
+    <div class="card m-3" style="width: 18rem;">
+        <img src="assistance_pic.jpg" class="card-img-top img-fluid" alt="_blank">
+        <div class="card-body">
+            <p class="card-text">Tap to request assistance</p>
+        </div>
+    </div>
+  </a>
+  <a href="user_profile.php">
+    <div class="card  m-3" style="width: 18rem;">
+      <img src="info.jpg" class="card-img-top img-fluid" alt="_blank">
+        <div class="card-body">
+            <p class="card-text">Tap to complete user profile</p>
+        </div>
+    </div>
+  </a>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </html>

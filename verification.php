@@ -10,7 +10,7 @@
 <body>
 
   <div class="otp">
-    <form action="submit">
+    <form action="index.php">
         <div class="box">
             <p>enter one-time pin</p>
             <input type="text" placeholder="Type one time pin">

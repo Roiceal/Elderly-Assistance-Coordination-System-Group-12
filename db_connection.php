@@ -1,15 +1,31 @@
 <?php
+class Database {
+    private $db_server = "localhost";
+    private $db_user = "root";
+    private $db_pass = "";
+    private $db_name = "elderlyassistancecoordinationdb";
+    public $conn;
 
-$db_server = "localhost";
-$db_user = "root";
-$db_pass = "";
-$db_name = "elderlyassistancecoordinationdb";
-$conn = "";
+    public function __construct() {
+        $this->connect();
+    }
 
-$conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
+    private function connect() {
+        $this->conn = new mysqli($this->db_server, $this->db_user, $this->db_pass, $this->db_name);
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+        if ($this->conn->connect_error) {
+            die("Database connection failed: " . htmlspecialchars($this->conn->connect_error));
+        }
+    }
+
+    public function getConnection() {
+        return $this->conn;
+    }
+
+    public function close() {
+        if ($this->conn) {
+            $this->conn->close();
+        }
+    }
 }
-
 ?>
