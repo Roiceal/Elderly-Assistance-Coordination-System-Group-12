@@ -66,48 +66,54 @@ html, body {
   flex-shrink: 0;
 }
 
-/* TABLE */
 .attendance-log table {
   width: 100%;
-  min-width: 700px;
   border: 1px solid rgb(0, 0, 0);
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto; 
+  min-width: 800px;  
 }
 
 .attendance-log th, 
 .attendance-log td {
   text-align: left;
   padding: 10px 12px;
+  vertical-align: top;
   word-wrap: break-word;
+  white-space: normal; 
+  overflow-wrap: break-word;
+}
+
+/* Column width hints (not strict) */
+.attendance-log th:nth-child(1),
+.attendance-log td:nth-child(1) {
+  width: 150px; /* Name */
+}
+
+.attendance-log th:nth-child(2),
+.attendance-log td:nth-child(2) {
+  width: 120px; /* Card ID */
+}
+
+.attendance-log th:nth-child(3),
+.attendance-log td:nth-child(3) {
+  width: 210px; /* Address*/
+}
+
+.attendance-log th:nth-child(4),
+.attendance-log td:nth-child(4),
+.attendance-log th:nth-child(5),
+.attendance-log td:nth-child(5) {
+  width: 140px; /* Time In & Out */
 }
 
 
-.attendance-log th:nth-child(1), /* name */
-.attendance-log td:nth-child(1) { width: 160px; }
-
-.attendance-log th:nth-child(2), /* card id */
-.attendance-log td:nth-child(2) { width: 130px; }
-
-.attendance-log th:nth-child(3), /* address */
-.attendance-log td:nth-child(3) { width: 210px; }
-
-.attendance-log th:nth-child(4), /* time in, time out */
-.attendance-log td:nth-child(4),
-.attendance-log th:nth-child(5),
-.attendance-log td:nth-child(5) { width: 150px; }
-
-
 @media (max-width: 1100px) {
-  .container {
-    overflow-x: auto; 
-  }
-
   .attendance-log {
-    min-width: 700px;
+    overflow-x: auto;
   }
 
-  .header-bar {
-    flex-wrap: nowrap;
+  .attendance-log table {
+    min-width: 800px;
   }
 }
