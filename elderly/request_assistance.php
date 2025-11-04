@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </li>
         </ul>
 
-        <a class="btn btn-danger" href="logout.php">Logout</a>
+        <a class="btn btn-danger" href="../login/logout.php">Logout</a>
       </div>
     </div>
   </nav>

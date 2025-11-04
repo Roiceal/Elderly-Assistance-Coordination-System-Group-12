@@ -62,5 +62,17 @@ body {
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
 
+
+    .user_profile {
+      background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 40px 30px;
+  margin: 100px auto;
+  max-width: 600px;
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+    }
+
     
      

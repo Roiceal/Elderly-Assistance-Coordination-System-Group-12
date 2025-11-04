@@ -1,63 +1,91 @@
+<?php
+session_start();
+require_once '../database/db_connection.php';
+
+// Redirect if not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login/login.php");
+    exit;
+}
+
+$db = new Database();
+$conn = $db->getConnection();
+$user_id = $_SESSION['user_id'];
+
+// Handle profile update
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $address = trim($_POST['address']);
+    $gender = trim($_POST['gender']);
+    $birthday = trim($_POST['birthday']);
+    $rfid_pin = trim($_POST['rfid_pin']);
+
+    $stmt = $conn->prepare("CALL UpdateUserProfile(?, ?, ?, ?, ?)");
+    $stmt->bind_param("issss", $user_id, $address, $gender, $birthday, $rfid_pin);
+
+    if ($stmt->execute()) {
+        $success_message = "Profile updated successfully!";
+         header("Location: user_profile.php?updated=1");
+         exit;
+    } else {
+        $error_message = "Error updating profile: " . $stmt->error;
+    }
+    $stmt->close();
+}
+
+// Fetch updated user info
+$stmt = $conn->prepare("SELECT username, email, phone_number, address, gender, birthday, role, rfid_pin FROM users WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+$stmt->close();
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile</title>
+  <title>Edit Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="elder.css">
 </head>
 <body>
+<div class="container mt-5 pt-5">
+  <div class="col-md-6 mx-auto bg-white shadow p-4 rounded">
+    <h3 class="text-center mb-4">Edit Profile</h3>
 
+    <?php if (isset($success_message)): ?>
+      <div class="alert alert-success text-center"><?= htmlspecialchars($success_message) ?></div>
+    <?php elseif (isset($error_message)): ?>
+      <div class="alert alert-danger text-center"><?= htmlspecialchars($error_message) ?></div>
+    <?php endif; ?>
 
-  <nav class="navbar navbar-expand-lg bg-light fixed-top">
-    <div class="container">
-      <h1 class="navbar-brand fw-bold mb-0">EACS</h1>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="home.php">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="notif.php">Notification</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="request_assistance.php">Request Assistance</a>
-          </li>
-           <li class="nav-item">
-            <a class="nav-link" href="user_profile.php">User Profile</a>
-          </li>
-        </ul>
-
-        <a class="btn btn-danger" href="logout.php">Logout</a>
+    <form action="edit_profile.php" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Address</label>
+        <input type="text" name="address" class="form-control rounded-pill" value="<?= htmlspecialchars($user['address']) ?>">
       </div>
-    </div>
-  </nav>
 
-    <div class="complete_profile">
-        <form action="user_profile.php" method="$_POST">
-            <div class="box">
-                <input type="text" name="address" class="form-control rounded-pill" placeholder="Enter your Address">
-            </div>
-            <div class="box">
-                <input type="text" name="gender" class="form-control rounded-pill" placeholder="Type your Gender"> 
-            </div>
-            <div class="box">
-                <input type="text" name="birthday" class="form-control rounded-pill" placeholder="Enter your Birthday">
-            </div>
-            <div class="box">
-                <input type="text" name="rfid_pin" class="form-control rounded-pill" placeholder="Enter RFID Pin">
-            </div>
-            <div class="button">
-                <button type="submit" onclick="window.location.href=''" class="btn btn-success rounded-pill d-grid gap-2 col-6 mx-auto">confirm</button>
-            </div>
-            </form>
-    </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+      <div class="mb-3">
+        <label class="form-label">Gender</label>
+        <input type="text" name="gender" class="form-control rounded-pill" value="<?= htmlspecialchars($user['gender']) ?>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Birthday</label>
+        <input type="date" name="birthday" class="form-control rounded-pill" value="<?= htmlspecialchars($user['birthday']) ?>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">RFID Pin</label>
+        <input type="text" name="rfid_pin" class="form-control rounded-pill" value="<?= htmlspecialchars($user['rfid_pin']) ?>">
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-success rounded-pill px-4">Save Changes</button>
+        <a href="user_profile.php" class="btn btn-secondary rounded-pill px-4">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>
