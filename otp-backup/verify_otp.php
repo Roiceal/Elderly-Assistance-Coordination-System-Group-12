@@ -71,34 +71,12 @@ $phone = $_GET['phone'] ?? '';
     button:hover {
       background-color: #0056b3;
     }
-
-    #countdown {
-      margin-top: 15px;
-      color: #555;
-      font-size: 14px;
-    }
-
-    #resendBtn {
-      display: none;
-      background: none;
-      color: #007bff;
-      border: none;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    #resendBtn:hover {
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
   <div class="otp-container">
     <h2>Verify OTP</h2>
     <p>OTP sent. Please check your messages.</p>
-
     <form action="validate_otp.php" method="post" id="otpForm">
       <input type="hidden" name="phone" value="<?=htmlspecialchars($phone)?>">
       <div class="otp-inputs">
@@ -111,33 +89,26 @@ $phone = $_GET['phone'] ?? '';
       </div>
       <button type="submit">Verify</button>
     </form>
-
-    <p id="countdown">Resend code available in <span id="timer">30</span> seconds.</p>
-
-    <form action="send_otp.php" method="post">
-      <input type="hidden" name="phone" value="<?=htmlspecialchars($phone)?>">
-      <button id="resendBtn" type="submit">Resend OTP</button>
-    </form>
   </div>
 
   <script>
-    // Handle OTP input behavior
     const inputs = document.querySelectorAll('.otp-inputs input');
+
     inputs.forEach((input, index) => {
       input.addEventListener('input', () => {
-        if (input.value.length === 1 && index < inputs.length - 1) {
+        if(input.value.length === 1 && index < inputs.length - 1) {
           inputs[index + 1].focus();
         }
       });
 
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && input.value === '' && index > 0) {
+        if(e.key === 'Backspace' && input.value === '' && index > 0) {
           inputs[index - 1].focus();
         }
       });
     });
 
-    // Combine OTP digits before submission
+    // Optional: combine the 6 digits into a single value on submit
     document.getElementById('otpForm').addEventListener('submit', function(e){
       const otpValues = Array.from(inputs).map(i => i.value).join('');
       const hiddenInput = document.createElement('input');
@@ -146,22 +117,6 @@ $phone = $_GET['phone'] ?? '';
       hiddenInput.value = otpValues;
       this.appendChild(hiddenInput);
     });
-
-    // Countdown + show resend button after 30s
-    let timeLeft = 30;
-    const timerEl = document.getElementById('timer');
-    const countdownEl = document.getElementById('countdown');
-    const resendBtn = document.getElementById('resendBtn');
-
-    const timer = setInterval(() => {
-      timeLeft--;
-      timerEl.textContent = timeLeft;
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        countdownEl.style.display = "none";
-        resendBtn.style.display = "inline-block";
-      }
-    }, 1000);
   </script>
 </body>
 </html>

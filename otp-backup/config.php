@@ -8,10 +8,9 @@ return [
     ],
     // IPROG API token (get from your IPROG account)
     'iprog_api_token' => 'b3801576915b73107987929e34ea18b23def900b',
-
     // OTP settings
-    'otp_ttl_seconds' => 120, // ⏰ 1 minute expiration
+    'otp_ttl_seconds' => 300, // 5 minutes
     'otp_length' => 6,
-    'max_requests_per_phone_per_hour' => 3,
+    'max_requests_per_phone_per_hour' => 5,
 ];
 ?>
