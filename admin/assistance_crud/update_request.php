@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connection.php';
+require_once '../../database/db_connection.php';
 $db = new Database();
 $conn = $db->getConnection();
 
@@ -27,10 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $contact = $_POST['contact'];
     $type = $_POST['type'];
     $details = $_POST['details'];
+    $date_requested = $_POST['date_requested'];
 
     // Call stored procedure to update the record
-    $stmt = $conn->prepare("CALL update_assistance_request(?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssss", $id, $fullname, $address, $contact, $type, $details);
+    $stmt = $conn->prepare("CALL update_assistance_request(?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("issssss", $id, $fullname, $address, $contact, $type, $details, $date_requested);
 
     if ($stmt->execute()) {
         echo "<script>alert('Request updated successfully!'); window.location='read_request.php';</script>";
@@ -80,6 +81,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <div class="mb-3">
         <label class="form-label">Details</label>
         <textarea name="details" rows="4" class="form-control" required><?= htmlspecialchars($row['details']); ?></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Date Requested</label>
+        <input type="datetime-local" name="date_requested" 
+               value="<?= date('Y-m-d\TH:i', strtotime($row['date_requested'])); ?>" 
+               class="form-control" required>
       </div>
 
       <button type="submit" class="btn btn-primary">Update</button>

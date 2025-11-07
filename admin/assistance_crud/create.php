@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connection.php';
+require_once '../../database/db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $db = new Database();
@@ -10,10 +10,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $contact = $_POST['contact'];
     $type = $_POST['type'];
     $details = $_POST['details'];
+    $date_requested = date('Y-m-d H:i:s'); // current date and time
 
-    // Call the stored procedure
-    $stmt = $conn->prepare("CALL add_assistance_request(?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $fullname, $address, $contact, $type, $details);
+    // Call the stored procedure (now 6 parameters)
+    $stmt = $conn->prepare("CALL add_assistance_request(?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $fullname, $address, $contact, $type, $details, $date_requested);
 
     if ($stmt->execute()) {
         header("Location: read_request.php?success=1");
@@ -26,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->close();
     $conn->close();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
             <h2 class="text-center mb-4">Request Assistance</h2>
             
-            <form action="../database/create.php" method="POST">
+            <form action="create.php" method="POST">
                 <div class="mb-3">
                     <label for="fullname" class="form-label">Full Name</label>
                     <input type="text" name="fullname" id="fullname" class="form-control" placeholder="Enter your full name" required>
