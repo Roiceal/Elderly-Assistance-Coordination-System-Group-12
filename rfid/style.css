@@ -1,0 +1,119 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-color: rgb(247, 244, 234);
+  overflow-x: auto; 
+}
+
+
+.container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 40px 20px;
+  gap: 40px;
+  flex-wrap: nowrap; 
+  min-width: 1000px; 
+  overflow-x: auto; 
+}
+
+
+
+.card {
+  flex-shrink: 0; 
+  width: 250px;
+  height: 460px;
+  padding: 8px;
+  background-color: rgb(244, 240, 228);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-img-top {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+#rfidcard {
+  width: 200px;
+  height: 30px;
+}
+
+
+.attendance-log {
+  flex-grow: 1;
+  width: 800px;
+  font-size: small;
+  overflow-x: auto; 
+  white-space: nowrap;
+}
+
+
+.attendance-log .d-flex,
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap; 
+}
+
+#resetBtn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.attendance-log table {
+  width: 100%;
+  border: 1px solid rgb(0, 0, 0);
+  border-collapse: collapse;
+  table-layout: auto; 
+  min-width: 800px;  
+}
+
+.attendance-log th, 
+.attendance-log td {
+  text-align: left;
+  padding: 10px 12px;
+  vertical-align: top;
+  word-wrap: break-word;
+  white-space: normal; 
+  overflow-wrap: break-word;
+}
+
+/* Column width hints (not strict) */
+.attendance-log th:nth-child(1),
+.attendance-log td:nth-child(1) {
+  width: 150px; /* Name */
+}
+
+.attendance-log th:nth-child(2),
+.attendance-log td:nth-child(2) {
+  width: 120px; /* Card ID */
+}
+
+.attendance-log th:nth-child(3),
+.attendance-log td:nth-child(3) {
+  width: 210px; /* Address*/
+}
+
+.attendance-log th:nth-child(4),
+.attendance-log td:nth-child(4),
+.attendance-log th:nth-child(5),
+.attendance-log td:nth-child(5) {
+  width: 140px; /* Time In & Out */
+}
+
+
+@media (max-width: 1100px) {
+  .attendance-log {
+    overflow-x: auto;
+  }
+
+  .attendance-log table {
+    min-width: 800px;
+  }
+}
