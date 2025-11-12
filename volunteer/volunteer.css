@@ -1,0 +1,102 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: black; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    margin-bottom: 15px;
+}
+
+.menu-link {
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.menu-link:hover {
+    background: #3b82f6; /* Lighter blue hover */
+    border-radius: 5px;
+}
+
+/* Settings container */
+.settings-container {
+    margin-left: 250px; /* Creates space for sidebar */
+    padding: 50px 30px;
+}
+
+.settings-container h2 {
+    margin-bottom: 20px;
+    color: black;
+}
+
+/* Settings list styling */
+.settings-list {
+    list-style: none;
+    padding: 0;
+    max-width: 90%;
+}
+
+.settings-list li {
+    background: #ffffff;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.settings-link {
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    display: block;
+}
+
+.settings-link:hover {
+    color: #1e3a8a;
+}
+
+/* About Us container styling */
+.description-container {
+    margin-left: 250px; 
+    padding: 50px 30px;
+    background: #f4f4f4;
+}
+
+.description-container h1 {
+    color: black;
+    margin-bottom: 20px;
+}
+
+.description-container p {
+    color: #333;
+    line-height: 1.7;
+    max-width: 900px;
+    font-size: 16px;
+}
+
+footer{
+    margin-left: 250px;
+}

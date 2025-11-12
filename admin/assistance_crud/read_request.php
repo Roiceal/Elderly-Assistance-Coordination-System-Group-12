@@ -20,7 +20,7 @@ $result = $conn->query("CALL read_request()");
 
 <body class="p-4">
   <h2>Assistance Requests</h2>
-  <a href="create.php" class="btn btn-success mb-3">Add New Request</a>
+  <a href="add_request.php" class="btn btn-success mb-3">Add New Request</a>
 
 <table id="myTable" class="table table-bordered table-striped">
   <thead>
