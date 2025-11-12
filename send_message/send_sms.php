@@ -1,47 +1,50 @@
 <?php
-// ==============================
-// iProgSMS PHP Send Message Example
-// ==============================
+$config = require __DIR__ . '/config.php';
 
-// Your iProgSMS credentials
-$apiKey = "b3801576915b73107987929e34ea18b23def900b";       // Replace with your actual API key
-$senderId = "IPROGSMS";         // Registered Sender ID
-$apiUrl = "https://www.iprogsms.com/api/v3/sms/send"; // iProgSMS API endpoint
+// Initialize variables for feedback
+$responses = [];
 
-// Message data
-$phoneNumber = $_POST['phone'] ?? '';   // Example: 639123456789
-$message = $_POST['message'] ?? '';     // The message text
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $phoneNumbers = $_POST['phone'] ?? '';
+    $message = $_POST['message'] ?? '';
 
-// Basic validation
-if (!$phoneNumber || !$message) {
-    die("Phone number and message are required.");
+    if (empty($phoneNumbers) || empty($message)) {
+        $responses[] = ['type' => 'danger', 'text' => 'Phone number(s) and message are required.'];
+    } else {
+        // Split numbers by comma or whitespace
+        $numbersArray = preg_split('/[\s,]+/', trim($phoneNumbers));
+
+        foreach ($numbersArray as $phoneNumber) {
+            $phoneNumber = trim($phoneNumber);
+            if ($phoneNumber === '') continue;
+
+            $payload = [
+                'api_token' => $config['iprog_api_token'],
+                'phone_number' => $phoneNumber,
+                'message' => $message
+            ];
+
+            $ch = curl_init("https://sms.iprogtech.com/api/v1/sms_messages");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            $response = curl_exec($ch);
+
+            if (curl_errno($ch)) {
+                $responses[] = [
+                    'type' => 'danger',
+                    'text' => "Error sending to {$phoneNumber}: " . curl_error($ch)
+                ];
+            } else {
+                $responses[] = [
+                    'type' => 'success',
+                    'text' => "Message sent to {$phoneNumber}: " . htmlspecialchars($response)
+                ];
+            }
+
+            curl_close($ch);
+        }
+    }
 }
-
-// Prepare POST data
-$data = [
-    "apikey" => $apiKey,
-    "senderid" => $senderId,
-    "number" => $phoneNumber,
-    "message" => $message
-];
-
-// Initialize CURL
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $apiUrl);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-
-// Execute and decode response
-$response = curl_exec($ch);
-
-if (curl_errno($ch)) {
-    echo "Error: " . curl_error($ch);
-    exit;
-}
-
-curl_close($ch);
-
-// Display response
-echo "API Response: " . $response;
 ?>
