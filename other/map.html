@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Radar + Map (MapLibre) Example</title>
+
+  <!-- Radar Web SDK (v4) - stylesheet + script (from Radar docs). -->
+  <link href="https://js.radar.com/v4.5.3/radar.css" rel="stylesheet">
+  <script src="https://js.radar.com/v4.5.3/radar.min.js"></script>
+
+  <!-- MapLibre GL (JS + CSS) -->
+  <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+
+  <style>
+    body, html { height: 100%; margin: 0; font-family: Arial, sans-serif; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    .loading {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      background: rgba(255,255,255,0.9);
+      padding: 8px 12px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="status" class="loading">Initializing Radar SDK…</div>
+
+  <script>
+    // --- CONFIG: replace with your Radar publishable key ---
+    const RADAR_PUBLISHABLE_KEY = 'prj_live_pk_ccfa12331822ca7bf15439c6699c313a3d378a20';
+
+    // Initialize Radar (must be done before calling other Radar methods).
+    // Docs: Radar.initialize('prj_live_pk_...'); :contentReference[oaicite:1]{index=1}
+    if (!RADAR_PUBLISHABLE_KEY || RADAR_PUBLISHABLE_KEY.includes('YOUR_')) {
+      document.getElementById('status').innerText = '⚠️ Please set RADAR_PUBLISHABLE_KEY in the source.';
+      throw new Error('Missing Radar publishable key.');
+    }
+
+    Radar.initialize(RADAR_PUBLISHABLE_KEY, {
+      // optional config:
+      logLevel: 'info' // change to 'error' for production
+    });
+
+    // Show a MapLibre map after we get a location from Radar.trackOnce()
+    function showMapAt(lat, lng) {
+      // Demo style hosted by MapLibre. For production, use your own tiles/style or a provider.
+      const styleUrl = 'https://demotiles.maplibre.org/style.json';
+
+      const map = new maplibregl.Map({
+        container: 'map',
+        style: styleUrl,
+        center: [lng, lat],
+        zoom: 13
+      });
+
+      // Add a simple marker at the user's location
+      const el = document.createElement('div');
+      el.style.width = '18px';
+      el.style.height = '18px';
+      el.style.borderRadius = '50%';
+      el.style.background = '#ff3b30';
+      el.style.boxShadow = '0 0 0 4px rgba(255,59,48,0.15)';
+
+      new maplibregl.Marker(el)
+        .setLngLat([lng, lat])
+        .addTo(map);
+
+      // update UI
+      document.getElementById('status').style.display = 'none';
+    }
+
+    // Use Radar.trackOnce() to request a single location update.
+    // This uses the browser's Geolocation API under the hood and sends to Radar.
+    // The promise resolves with { location, user, events } on success. :contentReference[oaicite:2]{index=2}
+    document.getElementById('status').innerText = 'Requesting location permission…';
+    Radar.trackOnce()
+      .then((result) => {
+        // result.location has latitude & longitude
+        const { location } = result;
+        if (!location) {
+          document.getElementById('status').innerText = 'Could not determine location.';
+          return;
+        }
+
+        const lat = location.latitude;
+        const lng = location.longitude;
+
+        document.getElementById('status').innerText = `Location found: ${lat.toFixed(5)}, ${lng.toFixed(5)} — rendering map…`;
+
+        // show map centered at the location
+        showMapAt(lat, lng);
+      })
+      .catch((err) => {
+        console.error('Radar error:', err);
+        // user denied permission or there was an error — show fallback or message
+        let msg = 'Error getting location.';
+        if (err && err.name === 'RadarLocationPermissionsError') {
+          msg = 'Location permission denied. Allow location to display the map.';
+        }
+        document.getElementById('status').innerText = '⚠️ ' + msg;
+      });
+  </script>
+</body>
+</html>
