@@ -10,7 +10,7 @@
 <body>
     <nav class="sidebar">
     <ul class="sidebar-menu">
-        <li class="menu-item"><a href="volunteer_homepage.html" class="menu-link">Home</a></li>
+        <li class="menu-item"><a href="volunteer_homepage.php" class="menu-link">Home</a></li>
         <li class="menu-item"><a href="#" class="menu-link">Notification</a></li>
         <li class="menu-item"><a href="#" class="menu-link">View Available Request</a></li>
         <li class="menu-item"><a href="#" class="menu-link">View Elder Location</a></li>
@@ -28,6 +28,7 @@
         <li><a href="language.php" class="settings-link">Language</a></li>
         <li><a href="about_us.html" class="settings-link">About Us</a></li>
         <li><a href="privacy_and_policy.html" class="settings-link">Privacy & Policy</a></li>
+        <li> <a class="btn btn-danger" href="../login/logout.php">Logout</a></li>
     </ul>
 </div>
 

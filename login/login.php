@@ -2,12 +2,21 @@
 require_once '../database/db_connection.php';
 session_start();
 
+// Optional: Sanitize input function for extra security
+function sanitize_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    return $data;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = new Database();
     $conn = $db->getConnection();
 
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    // Sanitize inputs
+    $username = sanitize_input($_POST['username']);
+    $password = trim($_POST['password']); // only trim password
 
     if (empty($username) || empty($password)) {
         $error = "Please fill in both fields.";
@@ -20,12 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
 
+            // Check password
             if ($password === $user['password'] || password_verify($password, $user['password'])) {
+                // Set session variables
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
 
-                header("Location: ../elderly/user_profile.php");
+                // Redirect based on role
+                if ($user['role'] === 'volunteer') {
+                    header("Location: ../volunteer/volunteer_homepage.php");
+                } else if ($user['role'] === 'user') {
+                    header("Location: ../elderly/user_profile.php");
+                } else {
+                    header("Location: ../elderly/user_profile.php"); // fallback
+                }
+
                 exit;
             } else {
                 $error = "Invalid password.";
@@ -40,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

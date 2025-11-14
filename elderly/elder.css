@@ -1,19 +1,24 @@
 body {
       background-color: #f7f9fc;
       padding-top: 80px;
-      text-align: center;
       font-family: "Segoe UI", sans-serif;
     }
 
     h2 {
+      text-align: center;
       font-weight: 700;
       color: #0d6efd;
       margin-top: 10px;
     }
 
     h4 {
+      text-align: center;
       color: #333;
       margin-top: 40px;
+    }
+    
+    p {
+      text-align: center;
     }
 
     .navbar {
@@ -74,5 +79,91 @@ body {
   transition: all 0.3s ease-in-out;
     }
 
-    
+ /* Sidebar styling */
+    .sidebar {
+      margin-top: 50px;
+      width: 220px;
+      height: 100vh;
+      background: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 20px;
+      transition: transform 0.3s ease;
+      z-index: 999;
+    }
+
+    /* Hide sidebar when toggled */
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-item {
+      margin-bottom: 15px;
+    }
+
+    .menu-link {
+      color: #ffffff;
+      text-decoration: none;
+      display: block;
+      padding: 12px 20px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .menu-link:hover {
+      background: #3b82f6;
+      border-radius: 5px;
+    }
+
+    /* Adjust navbar to move right when sidebar is open */
+    .content {
+      margin-left: 220px;
+      transition: margin-left 0.3s ease;
+      padding: 20px;
+    }
+
+    /* When sidebar hidden */
+    .content.full-width {
+      margin-left: 0;
+    }
+
+    /* Toggle button styling */
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: black;
+      font-size: 24px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+/* About Us container styling */
+.description-container {
+    margin-left: 250px; 
+    padding: 50px 30px;
+    background: #f4f4f4;
+}
+
+.description-container h1 {
+    color: black;
+    margin-bottom: 20px;
+}
+
+.description-container p {
+    color: #333;
+    line-height: 1.7;
+    max-width: 900px;
+    font-size: 16px;
+}
+
+footer{
+    margin-left: 250px;
+}
+
      

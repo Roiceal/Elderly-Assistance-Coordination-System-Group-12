@@ -1,14 +1,23 @@
 <?php
 require_once '../database/db_connection.php';
 
+// Sanitize Function
+function sanitize_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    return $data;
+}
+
 if (isset($_POST["submit"])) {
-    // Collect form data
-    $username = trim($_POST["username"]);
-    $email = trim($_POST["email"]);
-    $password = $_POST["password"];
+
+    // Sanitize form inputs
+    $username = sanitize_input($_POST["username"]);
+    $email = sanitize_input($_POST["email"]);
+    $password = $_POST["password"]; // do NOT sanitize password (only trim if needed)
     $passwordRepeat = $_POST["repeat_password"];
-    $role = $_POST["role"];
-    $phone_number = trim($_POST["phone_number"]);
+    $role = sanitize_input($_POST["role"]);
+    $phone_number = sanitize_input($_POST["phone_number"]);
 
     $errors = array();
 
@@ -50,6 +59,7 @@ if (isset($_POST["submit"])) {
         if ($result->num_rows > 0) {
             echo "<div class='alert alert-danger text-center'>Username or email already exists.</div>";
         } else {
+            // Insert into database
             $stmt = $conn->prepare("
                 INSERT INTO users (username, email, password, phone_number, role)
                 VALUES (?, ?, ?, ?, ?)

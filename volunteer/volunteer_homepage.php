@@ -1,3 +1,12 @@
+<?php 
+session_start();
+// Redirect to login if not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login/login.php");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +19,7 @@
 <body>
     <nav class="sidebar">
     <ul class="sidebar-menu">
-        <li class="menu-item"><a href="volunteer_homepage.html" class="menu-link">Home</a></li>
+        <li class="menu-item"><a href="volunteer_homepage.php" class="menu-link">Home</a></li>
         <li class="menu-item"><a href="#" class="menu-link">Notification</a></li>
         <li class="menu-item"><a href="#" class="menu-link">View Available Request</a></li>
         <li class="menu-item"><a href="#" class="menu-link">View Elder Location</a></li>
