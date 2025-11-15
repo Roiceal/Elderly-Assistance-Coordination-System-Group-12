@@ -15,11 +15,11 @@ function showCookieBanner() {
 
 // Function to accept cookies
 function acceptCookies() {
-    document.cookie = "cookies_accepted=true; path=/; max-age=" + 60*60*24*365; // 1 year
+    document.cookie = "cookies_accepted=true; path=/; max-age=" + 60*60*24*365;
     document.getElementById('cookieConsent').style.display = 'none';
 }
 function declineCookies() {
-    document.cookie = "cookies_accepted=false; path=/; max-age=" + 60*60*24*365; // 1 year
+    document.cookie = "cookies_accepted=false; path=/; max-age=" + 60*60*24*365;
     document.getElementById('cookieConsent').style.display = 'none';
 }
 
@@ -35,3 +35,4 @@ document.addEventListener('DOMContentLoaded', () => {
         declineBtn.addEventListener('click', declineCookies);
     }
 });
+
