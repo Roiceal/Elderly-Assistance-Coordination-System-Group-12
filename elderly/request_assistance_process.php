@@ -1,12 +1,16 @@
 <?php
+session_start();
 require_once '../database/db_connection.php';
+
+// Redirect if not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login/login.php");
+    exit;
+}
 
 // Sanitize Function
 function sanitize_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
-    return $data;
+    return htmlspecialchars(stripslashes(trim($data)), ENT_QUOTES, 'UTF-8');
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -14,7 +18,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $db = new Database();
     $conn = $db->getConnection();
 
-    // Get + sanitize form inputs
+    // Logged in user ID
+    $user_id = $_SESSION['user_id'];
+
+    // Get + sanitize inputs
     $fullname = sanitize_input($_POST['fullname']);
     $address = sanitize_input($_POST['address']);
     $contact = sanitize_input($_POST['contact']);
@@ -22,9 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $details = sanitize_input($_POST['details']);
     $date_requested = date("Y-m-d H:i:s");
 
-    // Call the stored procedure
-    $stmt = $conn->prepare("CALL add_assistance_request(?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss",
+    // Execute stored procedure
+    $stmt = $conn->prepare("CALL add_assistance_request(?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("issssss",
+        $user_id,
         $fullname,
         $address,
         $contact,

@@ -37,14 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['role'] = $user['role'];
 
                 // Redirect based on role
-                if ($user['role'] === 'volunteer') {
-                    header("Location: ../volunteer/volunteer_homepage.php");
-                } else if ($user['role'] === 'user') {
-                    header("Location: ../elderly/user_profile.php");
-                } else {
-                    header("Location: ../elderly/user_profile.php"); // fallback
-                }
-
+                // Redirect based on role
+      if ($user['role'] === 'admin') {
+          header("Location: ../admin/homepage_admin.php"); // admin page
+      } else if ($user['role'] === 'volunteer') {
+        header("Location: ../volunteer/volunteer_homepage.php");
+      } else if ($user['role'] === 'user') {
+        header("Location: ../elderly/home.php");
+      } else {
+        header("Location: ../elderly/user_profile.php"); // fallback
+      }
                 exit;
             } else {
                 $error = "Invalid password.";

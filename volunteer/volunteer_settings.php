@@ -12,7 +12,7 @@
     <ul class="sidebar-menu">
         <li class="menu-item"><a href="volunteer_homepage.php" class="menu-link">Home</a></li>
         <li class="menu-item"><a href="#" class="menu-link">Notification</a></li>
-        <li class="menu-item"><a href="#" class="menu-link">View Available Request</a></li>
+        <li class="menu-item"><a href="volunteer_requests.php" class="menu-link">View Available Request</a></li>
         <li class="menu-item"><a href="#" class="menu-link">View Elder Location</a></li>
         <li class="menu-item"><a href="#" class="menu-link">Task History</a></li>
         <li class="menu-item"><a href="volunteer_settings.php" class="menu-link">Settings</a></li>
@@ -23,7 +23,7 @@
 <div class="settings-container">
     <h2>Settings</h2>
     <ul class="settings-list">
-        <li><a href="view_profile.php" class="settings-link">View Profile</a></li>
+        <li><a href="volunteer_profile.php" class="settings-link">View Profile</a></li>
         <li><a href="change_password.php" class="settings-link">Change Password</a></li>
         <li><a href="language.php" class="settings-link">Language</a></li>
         <li><a href="about_us.html" class="settings-link">About Us</a></li>

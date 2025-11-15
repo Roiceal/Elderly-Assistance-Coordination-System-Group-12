@@ -6,41 +6,60 @@ body {
     background: #f4f4f4;
 }
 
-/* Sidebar styling */
-.sidebar {
-    width: 220px;
-    height: 100vh;
-    background: black; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 20px;
-}
+    
+    .user_profile {
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 40px 30px;
+  margin: 60px auto;
+  max-width: 600px;
+  text-align: left;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+    }
 
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+ /* Sidebar styling */
+    .sidebar {
+      margin-top: 50px;
+      width: 220px;
+      height: 100vh;
+      background: black;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 20px;
+      transition: transform 0.3s ease;
+      z-index: 999;
+    }
 
-.menu-item {
-    margin-bottom: 15px;
-}
+    /* Hide sidebar when toggled */
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
 
-.menu-link {
-    color: #ffffff;
-    text-decoration: none;
-    display: block;
-    padding: 12px 20px;
-    font-size: 16px;
-    transition: background 0.3s;
-}
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-.menu-link:hover {
-    background: #3b82f6; /* Lighter blue hover */
-    border-radius: 5px;
-}
+    .menu-item {
+      margin-bottom: 15px;
+    }
 
+    .menu-link {
+      color: #ffffff;
+      text-decoration: none;
+      display: block;
+      padding: 12px 20px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .menu-link:hover {
+      background: #3b82f6;
+      border-radius: 5px;
+    }
 /* Settings container */
 .settings-container {
     margin-left: 250px; /* Creates space for sidebar */

@@ -1,33 +1,115 @@
-/* Sidebar styling */
-.sidebar {
-  background-color: #198754; /* Bootstrap green */
-  color: white;
-  width: 250px;
+body {
+      background-color: #f7f9fc;
+      padding-top: 50px;
+      font-family: "Segoe UI", sans-serif;
+    }
+ /* Sidebar styling */
+    .sidebar {
+      margin-top: 50px;
+      width: 220px;
+      height: 100vh;
+      background: black;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 20px;
+      transition: transform 0.3s ease;
+      z-index: 999;
+    }
+
+    /* Hide sidebar when toggled */
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-item {
+      margin-bottom: 15px;
+    }
+
+    .menu-link {
+      color: #ffffff;
+      text-decoration: none;
+      display: block;
+      padding: 12px 20px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    .menu-link:hover {
+      background: #3b82f6;
+      border-radius: 5px;
+    }
+
+    /* Adjust navbar to move right when sidebar is open */
+    .content {
+      margin-left: 220px;
+      transition: margin-left 0.3s ease;
+      padding: 20px;
+    }
+
+    /* When sidebar hidden */
+    .content.full-width {
+      margin-left: 0;
+    }
+
+    /* Toggle button styling */
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: black;
+      font-size: 24px;
+      cursor: pointer;
+      margin-right: 10px
+    }
+
+     .navbar {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .nav-link {
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    /* Settings container */
+.settings-container {
+    margin-left: 250px; /* Creates space for sidebar */
+    padding: 50px 30px;
 }
 
-.sidebar .offcanvas-body {
-  padding: 1rem;
+.settings-container h2 {
+    margin-bottom: 20px;
+    color: black;
 }
 
-.sidebar .nav-link {
-  color: white;
-  margin: 8px 0;
-  padding: 10px;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+/* Settings list styling */
+.settings-list {
+    list-style: none;
+    padding: 0;
+    max-width: 90%;
 }
 
-.sidebar .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.settings-list li {
+    background: #ffffff;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Main content */
-.content {
-  margin-left: 250px;
+.settings-link {
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    display: block;
 }
 
-@media (max-width: 992px) {
-  .content {
-    margin-left: 0;
-  }
+.settings-link:hover {
+    color: #1e3a8a;
 }

@@ -34,7 +34,7 @@ $conn->close();
   <meta charset="UTF-8">
   <title>User Profile</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-   <link rel="stylesheet" href="elder.css">
+   <link rel="stylesheet" href="volunteer.css">
 
 </head>
 <body>
@@ -42,41 +42,22 @@ $conn->close();
     <button class="toggle-btn" id="toggleSidebar">
         ☰
       </button>
+</nav>
     <div class="container">
-       
-
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="home.php">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="notif.php">Notification</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="request_assistance.php">Request Assistance</a>
-          </li>
-           <li class="nav-item">
-            <a class="nav-link" href="elder_about_us.php">About Us</a>
-          </li>
-        </ul>
-
-        <a class="btn btn-danger" href="../login/logout.php">Logout</a>
-      </div>
-    </div>
-  </nav>
-
-  <nav class="sidebar" id="sidebar">
+           <nav class="sidebar" id="sidebar">
     <ul class="sidebar-menu">
-      <li class="menu-item"><a href="user_profile.php" class="menu-link">View Profile</a></li>
-      <li class="menu-item"><a href="#" class="menu-link">Change Password</a></li>
-      <li class="menu-item"><a href="#" class="menu-link">Language</a></li>
-      <li class="menu-item"><a href="elder_privacy_and_policy.html" class="menu-link">Privacy and Policy</a></li>
+        <li class="menu-item"><a href="volunteer_homepage.php" class="menu-link">Home</a></li>
+        <li class="menu-item"><a href="#" class="menu-link">Notification</a></li>
+        <li class="menu-item"><a href="volunteer_requests.php" class="menu-link">View Available Request</a></li>
+        <li class="menu-item"><a href="#" class="menu-link">View Elder Location</a></li>
+        <li class="menu-item"><a href="#" class="menu-link">Task History</a></li>
+        <li class="menu-item"><a href="volunteer_settings.php" class="menu-link">Settings</a></li>
+        
     </ul>
-  </nav>
+           </nav>
 
 <div class="user_profile">
-        <h3 class="text-center">User Profile</h3>
+        <h3 class="text-center">Volunteer Profile</h3>
 
         <p><strong>Username:</strong> <?= htmlspecialchars($user['username']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
@@ -93,7 +74,7 @@ $conn->close();
 </div>
 </body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
+ <script>
     const toggleBtn = document.getElementById('toggleSidebar');
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
