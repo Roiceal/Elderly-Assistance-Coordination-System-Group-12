@@ -1,5 +1,5 @@
 <?php
-require_once '../database/db_connection.php';
+include_once '../database/db_connection.php';
 
 // Sanitize Function
 function sanitize_input($data) {

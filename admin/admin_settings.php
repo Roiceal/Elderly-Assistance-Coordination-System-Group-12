@@ -26,8 +26,9 @@ if (!isset($_SESSION['user_id'])) {
   <nav class="sidebar" id="sidebar">
     <ul class="sidebar-menu">
       <li class="menu-item"><a href="user_profile.php" class="menu-link">Dashboard</a></li>
-      <li class="menu-item"><a href="#" class="menu-link">Users</a></li>
-      <li class="menu-item"><a href="assistance_crud/read_request.php" class="menu-link">Assistance Request</a></li>
+      <li class="menu-item"><a href="homepage_admin.php" class="menu-link">Home</a></li>
+      <li class="menu-item"><a href="./users_crud/read_users.php" class="menu-link">Users</a></li>
+      <li class="menu-item"><a href="./assistance_crud/read_request.php" class="menu-link">Assistance Request</a></li>
       <li class="menu-item"><a href="" class="menu-link">Programs</a></li>
       <li class="menu-item"><a href="rfid/index.php" class="menu-link">Attendance</a></li>
       <li class="menu-item"><a href="" class="menu-link">Activity log</a></li>

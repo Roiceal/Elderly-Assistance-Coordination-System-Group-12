@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../database/db_connection.php';
+include_once '../../database/db_connection.php';
 
 // Admin-only: no need for volunteer session check
 $db = new Database();

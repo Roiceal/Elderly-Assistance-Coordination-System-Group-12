@@ -8,6 +8,11 @@
     <title>Volunteer_UI</title>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg bg-light fixed-top">
+    <button class="toggle-btn" id="toggleSidebar">
+        ☰
+      </button>
+</nav>
     <nav class="sidebar">
     <ul class="sidebar-menu">
         <li class="menu-item"><a href="volunteer_homepage.php" class="menu-link">Home</a></li>
@@ -35,4 +40,14 @@
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+ <script>
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('hidden');
+      content.classList.toggle('full-width');
+    });
+  </script>
 </html>

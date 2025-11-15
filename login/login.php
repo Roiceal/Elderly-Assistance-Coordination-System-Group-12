@@ -1,5 +1,5 @@
 <?php
-require_once '../database/db_connection.php';
+include_once '../database/db_connection.php';
 session_start();
 
 // Optional: Sanitize input function for extra security
@@ -71,6 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<p>passwords</p>
+<p>Admin/ username: admin  Password: E@cS2025!SYST3M! </p>
+<p>User/ username: Roice Panes Password: !roice@</p>
+<p>Volunteer/ username: John Doe password: !johndoe!</p>
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">

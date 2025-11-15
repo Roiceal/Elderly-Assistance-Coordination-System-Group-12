@@ -1,5 +1,5 @@
 <?php
-require_once '../../database/db_connection.php';
+include_once '../../database/db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $db = new Database();

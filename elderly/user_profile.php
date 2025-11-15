@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../database/db_connection.php';
+include_once '../database/db_connection.php';
 
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
@@ -71,7 +71,7 @@ $conn->close();
       <li class="menu-item"><a href="user_profile.php" class="menu-link">View Profile</a></li>
       <li class="menu-item"><a href="#" class="menu-link">Change Password</a></li>
       <li class="menu-item"><a href="#" class="menu-link">Language</a></li>
-      <li class="menu-item"><a href="elder_privacy_and_policy.html" class="menu-link">Privacy and Policy</a></li>
+      <li class="menu-item"><a href="elder_privacy_and_policy.php" class="menu-link">Privacy and Policy</a></li>
     </ul>
   </nav>
 
