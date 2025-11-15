@@ -5,52 +5,54 @@ $conn = $db->getConnection();
 
 // --- Fetch record for editing ---
 if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+    $id = (int) $_GET['id']; 
 
-    // Call stored procedure to get record by ID
-    $stmt = $conn->prepare("CALL get_request_by_id(?)");
+    $stmt = $conn->prepare("
+        SELECT request_id, fullname, address, contact, type, details, date_requested
+        FROM assistance_request
+        WHERE request_id = ?
+    ");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
     $stmt->close();
-
-    // Clear remaining results to avoid "commands out of sync" error
-    $conn->next_result();
 }
 
 // --- Handle update form submission ---
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $id = $_POST['id'];
-    $fullname = $_POST['fullname'];
-    $address = $_POST['address'];
-    $contact = $_POST['contact'];
-    $type = $_POST['type'];
-    $details = $_POST['details'];
-    $date_requested = $_POST['date_requested'];
+    $id = (int) $_POST['id'];
+    $fullname = trim($_POST['fullname']);
+    $address = trim($_POST['address']);
+    $contact = trim($_POST['contact']);
+    $type = trim($_POST['type']);
+    $details = trim($_POST['details']);
+    $date_requested = trim($_POST['date_requested']);
 
-    // Call stored procedure to update the record
-    $stmt = $conn->prepare("CALL update_assistance_request(?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssss", $id, $fullname, $address, $contact, $type, $details, $date_requested);
+    $stmt = $conn->prepare("
+        UPDATE assistance_request
+        SET fullname = ?, address = ?, contact = ?, type = ?, details = ?, date_requested = ?
+        WHERE request_id = ?
+    ");
+    $stmt->bind_param("ssssssi", $fullname, $address, $contact, $type, $details, $date_requested, $id);
 
     if ($stmt->execute()) {
         echo "<script>alert('Request updated successfully!'); window.location='read_request.php';</script>";
+        exit;
     } else {
-        echo "<script>alert('Error updating request: " . $stmt->error . "');</script>";
+        echo "<script>alert('Error updating request: " . htmlspecialchars($stmt->error) . "');</script>";
     }
 
     $stmt->close();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Edit Request</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-      <link rel="stylesheet" href="../adminpannel.css"> 
-
+  <link rel="stylesheet" href="../adminpannel.css"> 
 </head>
 
 <body class="p-4">

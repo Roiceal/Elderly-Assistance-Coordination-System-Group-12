@@ -68,7 +68,7 @@ if (isset($_POST["submit"])) {
 
             if ($stmt->execute()) {
                 echo "<div class='alert alert-success text-center'>Registration successful!</div>";
-                header("Location: login.php");
+                header("Location: ../index.php");
                 exit();
             } else {
                 echo "<div class='alert alert-danger text-center'>Error: " . htmlspecialchars($stmt->error) . "</div>";
@@ -95,7 +95,7 @@ if (isset($_POST["submit"])) {
 <body>
 
 <div class="register">
-    <form action="" method="POST">
+    <form action="register.php" method="POST">
         <div class="box">
             <input type="text" class="form-control rounded-pill" placeholder="Enter your Username" name="username" required>
         </div>

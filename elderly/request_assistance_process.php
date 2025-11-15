@@ -4,7 +4,7 @@ include_once '../database/db_connection.php';
 
 // Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login/login.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -29,8 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $details = sanitize_input($_POST['details']);
     $date_requested = date("Y-m-d H:i:s");
 
-    // Execute stored procedure
-    $stmt = $conn->prepare("CALL add_assistance_request(?, ?, ?, ?, ?, ?, ?)");
+    // Prepare the INSERT query
+    $stmt = $conn->prepare("INSERT INTO assistance_request (user_id, fullname, address, contact, type, details, date_requested) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("issssss",
         $user_id,
         $fullname,
@@ -41,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $date_requested
     );
 
+    // Execute the query
     if ($stmt->execute()) {
         echo "<script>alert('Request submitted successfully!'); window.location='request_assistance.php';</script>";
     } else {

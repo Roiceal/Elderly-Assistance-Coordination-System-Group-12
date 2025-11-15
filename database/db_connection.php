@@ -1,11 +1,19 @@
 <?php
 class Database {
-    private $db_server = "localhost";
-    private $db_user = "root";
-    private $db_pass = "";
-    private $db_name = "elderlyassistancecoordinationdb";
-    public $conn;
 
+
+    // private $db_server = "localhost";
+    // private $db_user = "root";
+    // private $db_pass = "";
+    // private $db_name = "elderlyassistancecoordinationdb";
+    // public $conn;
+
+    private $db_server = "sql201.infinityfree.com";
+    private $db_user = "if0_40425153";
+    private $db_pass = "ARxaZZB53Zmmhb";
+    private $db_name = "if0_40425153_elderlyassistancecoordinationdb";
+    public $conn;
+    
     public function __construct() {
         $this->connect();
     }

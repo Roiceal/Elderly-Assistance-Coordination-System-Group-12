@@ -4,7 +4,7 @@ include_once '../database/db_connection.php';
 
 // Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login/login.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -19,15 +19,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $birthday = trim($_POST['birthday']);
     $rfid_pin = trim($_POST['rfid_pin']);
 
-    $stmt = $conn->prepare("CALL UpdateUserProfile(?, ?, ?, ?, ?)");
-    $stmt->bind_param("issss", $user_id, $address, $gender, $birthday, $rfid_pin);
+    // Direct UPDATE query instead of stored procedure
+    $stmt = $conn->prepare("
+        UPDATE users 
+        SET address = ?, gender = ?, birthday = ?, rfid_pin = ? 
+        WHERE user_id = ?
+    ");
+    $stmt->bind_param("ssssi", $address, $gender, $birthday, $rfid_pin, $user_id);
 
     if ($stmt->execute()) {
         $success_message = "Profile updated successfully!";
-         header("Location: user_profile.php?updated=1");
-         exit;
+        header("Location: user_profile.php?updated=1");
+        exit;
     } else {
-        $error_message = "Error updating profile: " . $stmt->error;
+        $error_message = "Error updating profile: " . htmlspecialchars($stmt->error);
     }
     $stmt->close();
 }

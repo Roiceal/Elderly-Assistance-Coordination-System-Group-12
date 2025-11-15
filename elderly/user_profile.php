@@ -4,7 +4,7 @@ include_once '../database/db_connection.php';
 
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login/login.php");
+    header("Location: ../index.php");
     exit;
 }
 
