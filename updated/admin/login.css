@@ -1,0 +1,106 @@
+/* Reset and full viewport height */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(235, 239, 224);
+}
+
+/* Wrapper to center the card */
+.login-wrapper {
+    height: 100vh;               
+    width: 100%;
+    display: flex;
+    align-items: center;          
+    justify-content: center;      
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Login card */
+.login-card {
+    background:rgb(225, 233, 201);
+    width: 100%;
+    max-width: 360px;             
+    padding: 25px 25px;           /* reduced padding to make card shorter */
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* Logo */
+/* Logo wrapper */
+.login-logo-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* centers logo horizontally */
+    margin-bottom: 15px;     /* space below logo */
+}
+
+/* Logo */
+.login-logo {
+    width: 120px;     /* change size here */
+    height: auto;
+    display: block;  /* ensures no extra space below image */
+    border-radius: 64px;
+}
+
+
+/* Heading */
+.login-card h1 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Inputs */
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 50px;
+    border: 1px solid #ced4da;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 8px rgba(13,110,253,0.2);
+}
+
+/* Button */
+.btn-success {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 50px;
+    background-color: rgb(181, 208, 138);
+    border: none;
+    font-weight: 600;
+}
+
+.btn-success:hover {
+    background-color: rgb(190, 248, 97);
+}
+
+/* Alerts */
+.alert-danger {
+    border-radius: 50px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 360px) {
+    .login-card {
+        max-width: 95%;
+        padding: 20px 15px;
+        min-height: 300px;
+    }
+
+
+}
