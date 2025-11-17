@@ -1,0 +1,257 @@
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(202, 220, 174);
+  color: rgb(58, 58, 57);
+  padding: 10px 20px;
+  font-size: 20px;
+  position: relative; /* Not fixed */
+  height: 70px;
+  z-index: 2000;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.hamburger {
+  font-size: 28px;
+  background: none;
+  border: none;
+  color: rgb(58, 58, 57);
+  cursor: pointer;
+}
+
+.logo {
+  font-size: 22px;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding-top: 60px;
+  z-index: 2000;
+  transition: left 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 32px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 15px 20px;
+}
+
+.sidebar ul li a {
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+
+.sidebar ul li:hover {
+  background-color: #555;
+  color: #fff;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: url('../images/Elderly.jpg') no-repeat center center/cover;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  padding: 60px 20px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 50px;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.hero .btn {
+  display: inline-block;
+  padding: 10px 28px;
+  font-size: 1rem;
+  background-color: rgb(202, 220, 174);
+  color: rgb(58, 58, 57);
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.2s;
+  margin: 5px;
+}
+
+.hero .btn:hover {
+  background-color: rgb(39, 193, 95);
+  color: white;
+  text-decoration: underline;
+}
+
+/* Footer */
+/* Footer */
+.site-footer {
+  margin-top: 0;
+}
+
+.footer-top {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: rgb(240, 245, 231);
+}
+
+.footer-top div,
+.footer-middle div {
+  flex: 1 1 250px;
+  min-width: 200px;
+}
+
+.footer-logos{
+padding-left: 8px;
+}
+.footer-social {
+  display: flex;
+  justify-content: flex-end;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.footer-bottom {
+  background: rgb(202, 220, 174);
+  padding: 26px;
+  text-align: center;
+  font-size: 14px;
+  height: 76px;
+}
+
+
+/* Cookie Consent */
+#cookieConsent {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(252, 236, 202);
+  color: rgb(0, 0, 0);
+  padding: 15px;
+  text-align: center;
+  z-index: 1000;
+}
+
+#cookieConsent button {
+  border: none;
+  background-color: #fff;
+  color: #333;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* 📱 Mobile Responsive */
+@media (max-width: 575px) {
+
+  .navbar {
+    height: auto;
+    padding: 8px 15px;
+  }
+
+  .logo {
+    font-size: 16px;
+    white-space: normal;
+  }
+
+  .hero {
+    padding: 30px 15px;
+  }
+
+  .hero h1 {
+    font-size: 1.4rem;
+  }
+
+  .hero .btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+
+  .footer-top {
+    text-align: center;
+  }
+
+  /* ✔ Center footer social on mobile */
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+}
