@@ -3,6 +3,18 @@ $config = require __DIR__ . '/config.php';
 $phone = trim($_POST['phone'] ?? $_GET['phone'] ?? '');
 if (!$phone) die('Phone number is required.');
 
+session_start();
+
+// Store registration data TEMPORARILY
+$_SESSION['reg_data'] = [
+    'fname' => $_POST['fname'] ?? '',
+    'lname' => $_POST['lname'] ?? '',
+    'phone' => $_POST['phone'] ?? '',
+    'uname' => $_POST['uname'] ?? '',
+    'password' => password_hash($_POST['password'] ?? '', PASSWORD_BCRYPT),
+    'seniorId' => $_POST['seniorId'] ?? ''
+];
+
 // Normalize phone
 function normalize_phone($p) {
     $p = preg_replace('/\D+/', '', $p);

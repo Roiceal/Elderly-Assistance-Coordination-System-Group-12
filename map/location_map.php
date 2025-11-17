@@ -6,6 +6,12 @@ $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
 
+// $host = 'sql102.infinityfree.com';
+// $db   = 'if0_40435320_location';
+// $user = 'if0_40435320';
+// $pass = 'SyJVNkJSVoj8';
+// $charset = 'utf8mb4';
+
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -38,7 +44,7 @@ body, html { height: 100%; margin: 0; }
 .sidebar a { display: block; padding: 12px 20px; color: white; text-decoration: none; transition: 0.3s; }
 .sidebar a:hover { background-color: white; color: black; }
 .main-content { margin-left: 250px; padding: 20px; height: 100%; display: flex; flex-direction: column; }
-#map { flex: 1; width: 100%; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); margin-top: 15px; }
+#map { flex: 1; width: 100%; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); margin-top: 15px; height: 500px;}
 h1 { text-align: center; margin-bottom: 20px; color: #0d6efd; font-weight: bold; }
 tr.clickable:hover { cursor: pointer; background-color: #f0f8ff; }
 </style>
@@ -62,8 +68,8 @@ tr.clickable:hover { cursor: pointer; background-color: #f0f8ff; }
 
   <div id="map"></div>
 
-  <div class="container mt-4">
-    <h2 class="mb-3">Saved Locations</h2>
+  <div class="container mt-2">
+    <h4 class="mb-1">Saved Locations</h4>
     <table class="table table-bordered table-striped" id="locationsTable">
       <thead class="table-primary">
         <tr>

@@ -8,11 +8,14 @@ if (!$phone || !$otp_submitted) {
     die('Missing phone or otp.');
 }
 
+session_start();
+
 // normalize as earlier
-function normalize_phone($p) {
+function normalize_phone($p)
+{
     $p = preg_replace('/\D+/', '', $p);
     if (strlen($p) == 11 && $p[0] === '0') {
-        return '63' . substr($p,1);
+        return '63' . substr($p, 1);
     }
     return $p;
 }
@@ -56,76 +59,113 @@ if (!$row) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OTP Verification</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f0f2f5;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
-    .container {
-        background: #fff;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        text-align: center;
-        max-width: 400px;
-    }
-    h2 {
-        margin-bottom: 20px;
-        color: #333;
-    }
-    .message {
-        font-size: 18px;
-        margin-bottom: 30px;
-        padding: 15px;
-        border-radius: 8px;
-    }
-    .success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    .error {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-    .btn {
-        display: inline-block;
-        padding: 12px 25px;
-        font-size: 16px;
-        color: #fff;
-        background-color: #007bff;
-        border: none;
-        border-radius: 6px;
-        text-decoration: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    .btn:hover {
-        background-color: #0056b3;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container">
-    <h2>OTP Verification</h2>
-    <div class="message <?= $success ? 'success' : 'error' ?>">
-        <?= htmlspecialchars($message) ?>
+    <div class="container">
+        <h2>OTP Verification</h2>
+        <div class="message <?= $success ? 'success' : 'error' ?>">
+            <?= htmlspecialchars($message) ?>
+        </div>
+        <?php if ($success) {
+
+            if (!isset($_SESSION['reg_data'])) {
+                die("No registration data found. Please register again.");
+            }
+
+            $data = $_SESSION['reg_data'];
+
+            // Insert user
+            $insert = $pdo->prepare("
+        INSERT INTO users (first_name, last_name, phone, username, password, senior_id)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+            $insert->execute([
+                $data['fname'],
+                $data['lname'],
+                $data['phone'],
+                $data['uname'],
+                $data['password'],
+                $data['seniorId']
+            ]);
+
+            // Clear temporary session
+            unset($_SESSION['reg_data']);
+
+        ?>
+            <a href="../login.php" class="btn">Proceed to Login</a>
+
+
+        <?php } else { ?>
+            <a href="verify_otp.php?phone=<?= htmlspecialchars($phone) ?>" class="btn">Try Again</a>
+        <?php } ?>
     </div>
-    <?php if($success): ?>
-        <a href="../login.php" class="btn">Proceed to Login</a>
-    <?php else: ?>
-        <a href="verify_otp.php?phone=<?= htmlspecialchars($phone) ?>" class="btn">Try Again</a>
-    <?php endif; ?>
-</div>
 </body>
+
 </html>

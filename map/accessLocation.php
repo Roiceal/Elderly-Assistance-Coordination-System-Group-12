@@ -18,7 +18,7 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-// Function to fetch address from latitude/longitude (server-side)
+// Function to fetch address from lat/lng
 function getAddress($lat, $lng) {
     $url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=$lat&lon=$lng&zoom=18&addressdetails=1";
     $opts = [
@@ -40,7 +40,14 @@ $locations = $stmt->fetchAll();
 // Add server-side addresses if not already in DB
 foreach ($locations as &$loc) {
     if (empty($loc['address'])) {
-        $loc['address'] = getAddress($loc['latitude'], $loc['longitude']);
+        $address = getAddress($loc['latitude'], $loc['longitude']);
+
+        // Save to DB
+        $update = $pdo->prepare("UPDATE user_locations SET address = ? WHERE id = ?");
+        $update->execute([$address, $loc['id']]);
+
+        // Update for table display
+        $loc['address'] = $address;
     }
 }
 ?>
@@ -51,18 +58,19 @@ foreach ($locations as &$loc) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Locations Map & Table</title>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+
 <style>
   #map { height: 500px; margin-bottom: 20px; }
   tr.clickable:hover { cursor: pointer; background-color: #f0f8ff; }
 </style>
 </head>
+
 <body>
 <div class="container mt-4">
   <h2 class="mb-3">Saved Locations</h2>
-
-  <div id="map"></div>
 
   <table class="table table-bordered table-striped">
     <thead class="table-primary">
@@ -76,10 +84,15 @@ foreach ($locations as &$loc) {
         <th>Timestamp</th>
       </tr>
     </thead>
+
     <tbody>
-      <?php if(!empty($locations)): ?>
-        <?php foreach($locations as $loc): ?>
-        <tr class="clickable" data-lat="<?= $loc['latitude'] ?>" data-lng="<?= $loc['longitude'] ?>" data-address="<?= htmlspecialchars($loc['address'], ENT_QUOTES) ?>">
+      <?php if (!empty($locations)): ?>
+        <?php foreach ($locations as $loc): ?>
+        <tr class="clickable"
+            data-lat="<?= $loc['latitude'] ?>"
+            data-lng="<?= $loc['longitude'] ?>"
+            data-address="<?= htmlspecialchars($loc['address'], ENT_QUOTES) ?>">
+
           <td><?= htmlspecialchars($loc['id']) ?></td>
           <td><?= htmlspecialchars($loc['ip_address']) ?></td>
           <td><?= htmlspecialchars($loc['latitude']) ?></td>
@@ -87,6 +100,7 @@ foreach ($locations as &$loc) {
           <td><?= htmlspecialchars($loc['accuracy']) ?></td>
           <td><?= htmlspecialchars($loc['address']) ?></td>
           <td><?= htmlspecialchars($loc['created_at']) ?></td>
+
         </tr>
         <?php endforeach; ?>
       <?php else: ?>
@@ -98,7 +112,10 @@ foreach ($locations as &$loc) {
   </table>
 </div>
 
+<div id="map"></div>
+
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
 <script>
 // Initialize map
 var map = L.map('map').setView([13.7565, 121.0583], 13);
@@ -107,6 +124,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
+// Custom icon
+var locationIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+    iconSize: [38, 38],
+    iconAnchor: [19, 38],
+    popupAnchor: [0, -38]
+});
+
 // Add markers for all locations
 var markers = [];
 document.querySelectorAll('tr.clickable').forEach(row => {
@@ -114,21 +139,24 @@ document.querySelectorAll('tr.clickable').forEach(row => {
     const lng = parseFloat(row.dataset.lng);
     const address = row.dataset.address;
 
-    const marker = L.marker([lat, lng]).addTo(map)
-        .bindPopup(`Address: ${address}<br>Lat: ${lat}, Lng: ${lng}`);
-    markers.push({marker, row});
+    const marker = L.marker([lat, lng], { icon: locationIcon }).addTo(map)
+        .bindPopup(`<b>Address:</b> ${address}<br><b>Lat:</b> ${lat}<br><b>Lng:</b> ${lng}`);
+
+    markers.push({ marker, row });
 });
 
-// Click table row -> move map to location
+// When clicking a row → move map + open popup
 document.querySelectorAll('tr.clickable').forEach(row => {
     row.addEventListener('click', () => {
         const lat = parseFloat(row.dataset.lat);
         const lng = parseFloat(row.dataset.lng);
-        map.setView([lat, lng], 16); // Zoom in
+
+        map.setView([lat, lng], 16);
         const m = markers.find(m => m.row === row);
         if (m) m.marker.openPopup();
     });
 });
 </script>
+
 </body>
 </html>

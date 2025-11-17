@@ -57,12 +57,12 @@
               <form action="otp/send_otp.php" method="post">
                 <div class="mb-1">
                   <label for="fname" class="form-label">First name</label>
-                  <input type="text" class="form-control" id="fname" required>
+                  <input type="text" class="form-control" id="fname" name="fname" required>
                 </div>
 
                 <div class="mb-1">
                   <label for="lname" class="form-label">Last name</label>
-                  <input type="text" class="form-control" id="lname" required>
+                  <input type="text" class="form-control" id="lname" name="lname" required>
                 </div>
 
                 <div class="mb-1">
@@ -72,17 +72,17 @@
 
                 <div class="mb-1">
                   <label for="uname" class="form-label">Username</label>
-                  <input type="text" class="form-control" id="uname" required>
+                  <input type="text" class="form-control" id="uname" name="uname" required>
                 </div>
 
                 <div class="mb-1">
                   <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" required>
+                  <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
                 </div>
 
                 <div class="mb-1">
                   <label for="seniorId" class="form-label">Your Senior ID Number</label>
-                  <input type="text" class="form-control" id="seniorId" required>
+                  <input type="text" class="form-control" id="seniorId" name="seniorId" required>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100">Register</button>

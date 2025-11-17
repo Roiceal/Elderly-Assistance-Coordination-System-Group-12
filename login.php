@@ -62,15 +62,15 @@
             <div class="col-md-6">
               <h2 class="text-center mb-4">Login to your account</h2>
 
-              <form>
+              <form action="login_process.php" method="post">
                 <div class="mb-3">
                   <label for="pnumber" class="form-label">Phone number</label>
-                  <input type="text" class="form-control" id="pnumber" placeholder="Enter your phone number">
+                  <input type="text" class="form-control" id="pnumber" name="phone" placeholder="Enter your phone number">
                 </div>
 
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
