@@ -1,5 +1,13 @@
-<?php 
-session_start();?>
+<?php
+
+session_start();
+
+if (!isset($_SESSION['user_id']) ) {
+    header("location:login.php");
+    exit();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -77,13 +85,93 @@ session_start();?>
             transform: translateY(-5px);
         }
 
-        /* Responsive mobile adjustments */
+        /* Responsive */
         @media (max-width: 768px) {
 
             #sidebar,
             #content {
                 margin-left: 0 !important;
                 width: 100%;
+            }
+        }
+
+        /* ============================
+           MODERN WELCOME HEADER DESIGN
+           ============================ */
+
+        .welcome-box {
+            background: linear-gradient(135deg, #4c6ef5, #7950f2);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .welcome-box h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        .welcome-box p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Floating Circles */
+        .welcome-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            filter: blur(2px);
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .circle1 {
+            width: 120px;
+            height: 120px;
+            top: -20px;
+            right: -20px;
+        }
+
+        .circle2 {
+            width: 80px;
+            height: 80px;
+            bottom: -15px;
+            left: -15px;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Fade in effect */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0px);
             }
         }
     </style>
@@ -99,16 +187,14 @@ session_start();?>
 
         <ul class="nav flex-column mt-3">
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-house"></i><span class="text">Home</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-heart"></i><span class="text">Health & Wellness</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-bell"></i><span class="text">Alerts</span></a></li>
+            <li class="nav-item"><a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
         </ul>
     </div>
 
-    <!-- Mobile Top Navbar -->
+    <!-- Mobile Navbar -->
     <nav class="navbar navbar-dark bg-dark d-md-none">
         <div class="container-fluid">
             <button class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
@@ -118,7 +204,7 @@ session_start();?>
         </div>
     </nav>
 
-    <!-- Mobile Sidebar (Offcanvas) -->
+    <!-- Mobile Sidebar -->
     <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="mobileSidebar">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">Menu</h5>
@@ -126,18 +212,24 @@ session_start();?>
         </div>
         <div class="offcanvas-body">
             <a href="#" class="nav-link"><i class="bi bi-house"></i> Home</a>
-            <a href="#" class="nav-link"><i class="bi bi-person"></i> Profile</a>
-            <a href="#" class="nav-link"><i class="bi bi-heart"></i> Health & Wellness</a>
-            <a href="#" class="nav-link"><i class="bi bi-bell"></i> Alerts</a>
+            <a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i> Profile</a>
             <a href="#" class="nav-link"><i class="bi bi-calendar-event"></i> Events</a>
             <a href="#" class="nav-link"><i class="bi bi-gear"></i> Settings</a>
-            <a href="#" class="nav-link"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            <a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
     </div>
 
     <!-- Main Content -->
     <div id="content">
-        <h1 class="mb-4">Welcome, John!</h1>
+
+        <!-- ⭐ Modern Welcome Header ⭐ -->
+        <div class="welcome-box mb-4 fade-in">
+            <div class="circle1 welcome-circle"></div>
+            <div class="circle2 welcome-circle"></div>
+
+            <h1>Hello, <?php echo $_SESSION['username']; ?>! 👋</h1>
+            <p>Your safety, health, and comfort are our top priority. How can we assist you today?</p>
+        </div>
 
         <!-- Dashboard Cards -->
         <div class="row g-4">
@@ -149,7 +241,6 @@ session_start();?>
                     <a href="request_assistance.php" class="btn btn-primary btn-sm">Request</a>
                 </div>
             </div>
-
 
             <div class="col-md-4">
                 <div class="card p-3">
@@ -170,6 +261,13 @@ session_start();?>
             </div>
         </div>
 
+        <div class="share_location mt-5 p-4 bg-white rounded shadow-sm">
+            <h4 id="status" class="mb-2">Click the button to share your location.</h4>
+            <p>To locate your current location, click the button to share your location.</p>
+            <button id="getLoc" class="btn btn-primary mb-3">Share my current location</button>
+        </div>
+
+
 
     </div>
 
@@ -177,7 +275,53 @@ session_start();?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Desktop sidebar toggle
+        document.getElementById('getLoc').addEventListener('click', () => {
+            const status = document.getElementById('status');
+            if (!navigator.geolocation) {
+                status.textContent = 'Geolocation not supported.';
+                return;
+            }
+            status.textContent = 'Requesting permission...';
+            navigator.geolocation.getCurrentPosition(pos => {
+                // fetch('admin_page/map/save_location.php', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify({
+                //         latitude: pos.coords.latitude,
+                //         longitude: pos.coords.longitude,
+                //         accuracy: pos.coords.accuracy
+                //     })
+                // }).then(r => r.json()).then(res => {
+                //     status.textContent = res.success ? 'Location saved!' : 'Error: ' + res.message;
+                //     if (res.success) location.reload();
+                // });
+
+                fetch('admin_page/map/save_location.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            latitude: pos.coords.latitude,
+                            longitude: pos.coords.longitude,
+                            accuracy: pos.coords.accuracy
+                        })
+                    })
+                    .then(r => r.text())
+                    .then(txt => {
+                        console.log("RAW RESPONSE:", txt);
+                        status.textContent = txt;
+                    });
+
+            }, err => {
+                status.textContent = 'Error: ' + err.message;
+            }, {
+                enableHighAccuracy: true
+            });
+        });
+
         document.getElementById("toggleSidebar").addEventListener("click", () => {
             const sidebar = document.getElementById("sidebar");
             const content = document.getElementById("content");

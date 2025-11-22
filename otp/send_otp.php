@@ -5,17 +5,25 @@ if (!$phone) die('Phone number is required.');
 
 session_start();
 
-// Store registration data TEMPORARILY
+// Handle uploaded profile image
+$profileImageFile = null;
+if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
+    // Store the temporary file info in session
+    $profileImageFile = $_FILES['profile_image'];
+}
+
+// Store registration data TEMPORARILY in session
 $_SESSION['reg_data'] = [
     'fname' => $_POST['fname'] ?? '',
     'lname' => $_POST['lname'] ?? '',
     'phone' => $_POST['phone'] ?? '',
     'uname' => $_POST['uname'] ?? '',
     'password' => password_hash($_POST['password'] ?? '', PASSWORD_BCRYPT),
-    'seniorId' => $_POST['seniorId'] ?? ''
+    'seniorId' => $_POST['seniorId'] ?? '',
+    'profile_image_file' => $profileImageFile // store the uploaded file info
 ];
 
-// Normalize phone
+// Normalize phone number
 function normalize_phone($p) {
     $p = preg_replace('/\D+/', '', $p);
     if (strlen($p) == 11 && $p[0] === '0') return '63' . substr($p, 1);
@@ -23,7 +31,7 @@ function normalize_phone($p) {
 }
 $phone_norm = normalize_phone($phone);
 
-// Connect DB
+// Connect to database
 try {
     $pdo = new PDO($config['db']['dsn'], $config['db']['user'], $config['db']['pass'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -45,7 +53,7 @@ $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 $otp_hash = password_hash($otp, PASSWORD_BCRYPT);
 $expires_at = (new DateTime())->add(new DateInterval('PT' . $config['otp_ttl_seconds'] . 'S'))->format('Y-m-d H:i:s');
 
-// Store OTP
+// Store OTP in DB
 $stmt = $pdo->prepare("INSERT INTO otp_codes (phone, otp_hash, expires_at) VALUES (?, ?, ?)");
 $stmt->execute([$phone_norm, $otp_hash, $expires_at]);
 

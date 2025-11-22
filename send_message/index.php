@@ -17,27 +17,12 @@
 
       <form action="send_sms.php" method="POST">
 
-        <!-- Recipient Numbers -->
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Recipient Number(s)</label>
-          <textarea 
-            name="phone"
-            class="form-control"
-            rows="2"
-            placeholder="Example: 639123456789, 639876543210"
-            required></textarea>
-          <small class="text-muted">Separate multiple numbers with commas.</small>
-        </div>
+      
 
         <!-- Message -->
         <div class="mb-3">
           <label class="form-label fw-semibold">Message</label>
-          <textarea 
-            name="message"
-            class="form-control"
-            rows="4"
-            placeholder="Type your message here..."
-            required></textarea>
+          <textarea name="message" class="form-control" rows="4" placeholder="Type your message..." required></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary w-100 py-2">

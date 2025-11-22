@@ -1,10 +1,14 @@
 <?php
-session_start();
+ 
+ session_start();
 
-if (isset($_SESSION['user_id'])) {
-  header("location:dashboard_elders.php");
-  exit();
+if(isset($_SESSION['user_id'])){
+    header("Location: dashboard_elders.php");
+    exit();
 }
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,19 +54,17 @@ if (isset($_SESSION['user_id'])) {
       text-decoration: underline;
     }
 
-    h2 {
+      h2 {
       color: #0d6efd;
       font-weight: bold;
     }
-
-    .link {
+    .link{
       text-decoration: none;
       border-radius: 50px;
       color: white;
     }
   </style>
 </head>
-
 <body>
 
   <div class="container">
@@ -73,19 +75,19 @@ if (isset($_SESSION['user_id'])) {
 
             <!-- Left Side: Logo + Text -->
             <div class="col-md-6 text-center text-md-start">
-              <img src="logo.png" alt="Eldercare Logo" class="logo img-fluid">
+              <img src="../logo.png" alt="Eldercare Logo" class="logo img-fluid">
               <h1 class="title h3 mt-2">ELDERCARE CONNECT</h1>
               <p class="text-muted">Assistance Coordination System</p>
             </div>
 
             <!-- Right Side: Login Form -->
             <div class="col-md-6">
-              <h2 class="text-center mb-4">Login to your account</h2>
+              <h2 class="text-center mb-4">Login as volunteer</h2>
 
               <form action="login_process.php" method="post">
                 <div class="mb-3">
-                  <label for="pnumber" class="form-label">Phone number</label>
-                  <input type="text" class="form-control" id="pnumber" name="phone" placeholder="Enter your phone number">
+                  <label for="pnumber" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="uname" name="uname" placeholder="Enter your username">
                 </div>
 
                 <div class="mb-3">
@@ -103,16 +105,15 @@ if (isset($_SESSION['user_id'])) {
 
                 <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
 
-
                 <p class="text-center mb-0">
-                  Don't have an account?
-                  <a href="index.php" class="text-primary">Register here</a>
+                  Don't have an account? 
+                  <a href="volunteer_register.php" class="text-primary link">Register here</a>
                 </p>
-                <div class="text-center mt-2">
-                  <a href="admin_page/admin_login.php" class="link btn btn-primary">Login as admin</a>
-                  <a href="volunteer/volunteer_login.php" class="btn btn-primary link">Login as volunteer</a>
-                </div>
 
+                <div class="text-center mt-2">
+                  <a href="../login.php" class="link btn btn-primary">Login as User</a>
+                  <a href="admin_page/admin_login.php" class="link btn btn-primary">Login as admin</a>
+                </div>
               </form>
             </div>
 
@@ -122,17 +123,5 @@ if (isset($_SESSION['user_id'])) {
     </div>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      if (!window.localStorage.getItem("page_refreshed_once")) {
-        window.localStorage.setItem("page_refreshed_once", "true");
-        window.location.reload();
-      }
-    });
-  </script>
-
-
-
 </body>
-
 </html>

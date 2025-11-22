@@ -10,7 +10,7 @@ if (!$phone || !$otp_submitted) {
 
 session_start();
 
-// normalize as earlier
+// Normalize phone as earlier
 function normalize_phone($p)
 {
     $p = preg_replace('/\D+/', '', $p);
@@ -29,7 +29,7 @@ try {
     die('DB connection failed: ' . $e->getMessage());
 }
 
-// get latest unused OTP for this phone
+// Get latest unused OTP for this phone
 $stmt = $pdo->prepare("SELECT id, otp_hash, expires_at, used FROM otp_codes WHERE phone = ? ORDER BY created_at DESC LIMIT 1");
 $stmt->execute([$phone_norm]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -65,6 +65,7 @@ if (!$row) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Verification</title>
     <style>
+        /* your previous styles here */
         body {
             font-family: Arial, sans-serif;
             background: #f0f2f5;
@@ -130,21 +131,37 @@ if (!$row) {
 <body>
     <div class="container">
         <h2>OTP Verification</h2>
-        <div class="message <?= $success ? 'success' : 'error' ?>">
-            <?= htmlspecialchars($message) ?>
-        </div>
-        <?php if ($success) {
+        <div class="message <?= $success ? 'success' : 'error' ?>"><?= htmlspecialchars($message) ?></div>
 
+        <?php if ($success):
             if (!isset($_SESSION['reg_data'])) {
                 die("No registration data found. Please register again.");
             }
 
             $data = $_SESSION['reg_data'];
 
-            // Insert user
+            // Handle profile image folder
+            $profile_path = null;
+            if (!empty($data['profile_image_file']) && isset($data['profile_image_file']['tmp_name'])) {
+                $uploadDir = __DIR__ . '/../uploads/profile_pics/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                $fileExt = pathinfo($data['profile_image_file']['name'], PATHINFO_EXTENSION);
+                $fileName = uniqid('profile_', true) . '.' . $fileExt;
+                $targetFile = $uploadDir . $fileName;
+
+                if (move_uploaded_file($data['profile_image_file']['tmp_name'], $targetFile)) {
+                    // Save relative path to DB
+                    $profile_path = 'uploads/profile_pics/' . $fileName;
+                }
+            }
+
+            // Insert user with profile image path
             $insert = $pdo->prepare("
-        INSERT INTO users (first_name, last_name, phone, username, password, senior_id)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO users (first_name, last_name, phone, username, password, senior_id, profile_image)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     ");
             $insert->execute([
                 $data['fname'],
@@ -152,19 +169,16 @@ if (!$row) {
                 $data['phone'],
                 $data['uname'],
                 $data['password'],
-                $data['seniorId']
+                $data['seniorId'],
+                $profile_path
             ]);
 
-            // Clear temporary session
             unset($_SESSION['reg_data']);
-
         ?>
             <a href="../login.php" class="btn">Proceed to Login</a>
-
-
-        <?php } else { ?>
+        <?php else: ?>
             <a href="verify_otp.php?phone=<?= htmlspecialchars($phone) ?>" class="btn">Try Again</a>
-        <?php } ?>
+        <?php endif; ?>
     </div>
 </body>
 

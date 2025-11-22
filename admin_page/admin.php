@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 $config = require __DIR__ . '/config.php';
 
 // Connect to database
@@ -81,13 +81,14 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <i class="bi bi-list"></i>
     </button>
     <ul class="nav flex-column mt-3">
-      <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-speedometer2"></i><span class="text">Dashboard</span></a></li>
-      <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-people"></i><span class="text">Users</span></a></li>
-      <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-bell"></i><span class="text">Requests</span></a></li>
+      <li class="nav-item"><a href="admin.php" class="nav-link"><i class="bi bi-speedometer2"></i><span class="text">Dashboard</span></a></li>
+      <li class="nav-item"><a href="userslist.php" class="nav-link"><i class="bi bi-people"></i><span class="text">Users</span></a></li>
+      <li class="nav-item"><a href="map/location_map.php" class="nav-link"><i class="bi bi-bell"></i><span class="text">Locate Elder</span></a></li>
       <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
-      <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-graph-up"></i><span class="text">Annoucement</span></a></li>
+      <li class="nav-item"><a href="make_announcement.php" class="nav-link"><i class="bi bi-graph-up"></i><span class="text">Annoucement</span></a></li>
       <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
-      <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+      <li class="nav-item"><a href="../rfid" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Attendance</span></a></li>
+      <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
     </ul>
   </div>
 

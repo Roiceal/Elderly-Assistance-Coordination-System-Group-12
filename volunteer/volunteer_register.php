@@ -1,18 +1,5 @@
-<?php
-
-session_start();
-
-if (isset($_SESSION['user_id'])) {
-  header("Location: dashboard_elders.php");
-  exit();
-}
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,19 +33,8 @@ if (isset($_SESSION['user_id'])) {
       color: #0d6efd;
       font-weight: bold;
     }
-
-    h2 {
-      color: #0d6efd;
-      font-weight: bold;
-    }
-
-    .link {
-      text-decoration: none;
-      border-radius: 50px;
-    }
   </style>
 </head>
-
 <body>
 
   <div class="container">
@@ -76,9 +52,9 @@ if (isset($_SESSION['user_id'])) {
 
             <!-- Right side: Form -->
             <div class="col-md-6">
-              <h2 class="text-center mb-4">Register your account</h2>
+              <h2 class="text-center mb-4">Register as a volunteer</h2>
 
-              <form action="otp/send_otp.php" enctype="multipart/form-data" method="post">
+              <form action="register_process.php" method="post">
                 <div class="mb-1">
                   <label for="fname" class="form-label">First name</label>
                   <input type="text" class="form-control" id="fname" name="fname" required>
@@ -99,29 +75,16 @@ if (isset($_SESSION['user_id'])) {
                   <input type="text" class="form-control" id="uname" name="uname" required>
                 </div>
 
-                <div class="mb-2">
+                <div class="mb-1">
                   <label for="exampleInputPassword1" class="form-label">Password</label>
                   <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
                 </div>
 
-                <!-- <div class="mb-2">
-                  <label for="profile_image" class="form-label">Profile Picture</label>
-                  <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
-                </div> -->
-
-                <!-- <div class="mb-1">
-                  <label for="seniorId" class="form-label">Your Senior ID Number</label>
-                  <input type="text" class="form-control" id="seniorId" name="seniorId" required>
-                </div> -->
 
                 <button type="submit" class="btn btn-primary w-100">Register</button>
               </form>
               <br>
-              <div class="text-center">
-                <p class="text-center">Already have an account?<a href="login.php"> Login</a></p>
-                <!-- <a href="volunteer/volunteer_register.php" class="btn btn-primary link">Register as a volunteer</a> -->
-              </div>
-
+              <p>Already have an account?<a href="volunteer_login.php">Login as a volunteer</a></p>
             </div>
 
           </div> <!-- row -->
@@ -131,5 +94,4 @@ if (isset($_SESSION['user_id'])) {
   </div>
 
 </body>
-
 </html>

@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 date_default_timezone_set('Asia/Manila');
 
 // db connection
-$conn = new mysqli("localhost", "root", "", "sampleattendance");
+$conn = new mysqli("localhost", "root", "", "elderlyassistancecoordinationdb");
 if ($conn->connect_error) {
     echo json_encode(["success" => false, "message" => "DB connection failed"]);
     exit;
