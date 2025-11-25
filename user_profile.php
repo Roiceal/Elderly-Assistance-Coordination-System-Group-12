@@ -74,7 +74,7 @@ body { font-family: Arial, sans-serif; background: #f8f9fa; overflow-x: hidden; 
 
     <!-- Profile Card -->
     <div class="profile-card fade-in">
-        <img src="<?= htmlspecialchars($profileImg) ?>" alt="Profile Picture" class="profile-img">
+        <img src="data:image/jpeg;base64,<?= base64_encode($user['profile_image']) ?>" alt="Profile Image" class="profile-img">
         <div class="profile-info">
             <h2><?= htmlspecialchars($user['username']) ?></h2>
             <p><strong>Name:</strong> <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></p>

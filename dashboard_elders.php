@@ -1,8 +1,11 @@
 <?php
-
 session_start();
 
-if (!isset($_SESSION['user_id']) ) {
+$user_id = $_SESSION['user_id'];
+$user_phone = $_SESSION['phone'];
+$username = $_SESSION['username'];
+
+if (!isset($user_id) && !isset($username) && !isset($username)) {
     header("location:login.php");
     exit();
 }
@@ -24,7 +27,7 @@ if (!isset($_SESSION['user_id']) ) {
 
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
             overflow-x: hidden;
         }
@@ -32,7 +35,7 @@ if (!isset($_SESSION['user_id']) ) {
         /* Sidebar */
         #sidebar {
             width: 250px;
-            background: black;
+            background: #1f4f3c;
             color: #fff;
             transition: 0.3s;
             position: fixed;
@@ -173,6 +176,14 @@ if (!isset($_SESSION['user_id']) ) {
                 opacity: 1;
                 transform: translateY(0px);
             }
+        }
+
+        .btn{
+            background-color: #2a7f62;
+            border: none;
+        }
+        .btn:hover{
+            background-color: #1f4f3c;
         }
     </style>
 </head>

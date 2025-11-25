@@ -2,24 +2,26 @@
 header('Content-Type: application/json');
 
 // Database connection
-$host = 'localhost';
-$db   = 'location';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
+// $host = 'localhost';
+// $db   = 'location';
+// $user = 'root';
+// $pass = '';
+// $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
+// $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+// $options = [
+//     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+//     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+// ];
 
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    echo json_encode(['success'=>false,'message'=>'Database connection failed']);
-    exit;
-}
+// try {
+//     $pdo = new PDO($dsn, $user, $pass, $options);
+// } catch (PDOException $e) {
+//     echo json_encode(['success'=>false,'message'=>'Database connection failed']);
+//     exit;
+// }
+
+include __DIR__ . '/../../db_connect.php';
 
 // Get parameters
 $id = $_GET['id'] ?? null;

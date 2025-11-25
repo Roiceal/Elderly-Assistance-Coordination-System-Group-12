@@ -15,7 +15,7 @@ session_start();
 
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
         }
 

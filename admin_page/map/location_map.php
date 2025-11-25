@@ -1,24 +1,6 @@
 <?php
 session_start();
-
-// Database connection
-$host = 'localhost';
-$db   = 'location';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
-}
+include __DIR__ . '/../../db_connect.php';
 
 // Fetch all locations
 $stmt = $pdo->query("SELECT * FROM user_locations ORDER BY created_at DESC");
@@ -45,7 +27,7 @@ $locations = $stmt->fetchAll();
 
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
             overflow-x: hidden;
         }
@@ -92,33 +74,34 @@ $locations = $stmt->fetchAll();
             transition: margin-left 0.3s;
         }
 
+        #topbar {
+            background-color: white;
+            color: black;
+            padding: 10px 20px;
+            display: flex;
+            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+
         /* Map & Table columns */
 
         /* Table Styling */
-        #locationsTable {
-            font-size: 0.90rem;
+
+        table thead {
+            background-color: white;
+            color: black;
         }
 
-        #locationsTable th {
-            font-weight: 550;
-            text-align: left;
+        table.dataTable tbody tr {
+            color: black;
+            background: white;
         }
 
-        #locationsTable td {
-            padding: 10px 12px;
-            vertical-align: middle;
-            word-wrap: break-word;
-        }
-
-        #locationsTable .address-cell {
-            max-width: 250px;
-        }
-
-        #locationsTable td:nth-child(3) {
-            /* Timestamp column */
-            text-align: center;
-            font-weight: 500;
-            color: #495057;
+        th {
+            background-color: white;
         }
 
         #map {
@@ -165,29 +148,36 @@ $locations = $stmt->fetchAll();
             <li class="nav-item"><a href="admin.php" class="nav-link"><i class="bi bi-speedometer2"></i><span class="text">Dashboard</span></a></li>
             <li class="nav-item"><a href="../userslist.php" class="nav-link"><i class="bi bi-people"></i><span class="text">Users</span></a></li>
             <li class="nav-item"><a href="map/location_map.php" class="nav-link"><i class="bi bi-bell"></i><span class="text">Locate Elder</span></a></li>
+             <li class="nav-item"><a href="../assign_volunteer.php" class="nav-link"><i class="bi bi-list-check"></i><span class="text">Volunteer Assignment</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
             <li class="nav-item"><a href="../make_announcement.php" class="nav-link"><i class="bi bi-graph-up"></i><span class="text">Annoucement</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
-            <li class="nav-item"><a href=".../rfid" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Attendance</span></a></li>
-            <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+            <li class="nav-item"><a href="../../rfid" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Attendance</span></a></li>
+            <li class="nav-item"><a href="../../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
         </ul>
     </div>
 
     <!-- Content -->
     <div id="content">
+        <div id="topbar">
+            <h4>Locate Elder</h4>
+            <div>
+                <i class="bi bi-person-circle fs-4"></i> Admin
+            </div>
+        </div>
         <div class="container-fluid">
             <div class="row g-4">
                 <!-- Column 1: Map -->
-                <div class="col-lg-7 col-md-12">
+                <div class="col-lg-5">
                     <div id="map"></div>
                 </div>
 
                 <!-- Column 2: Table -->
-                <div class="col-lg-5 col-md-12">
+                <div class="col-lg-7">
                     <div class="table-container">
                         <h4>Saved Locations</h4>
                         <table class="table table-bordered table-striped" id="locationsTable">
-                            <thead class="table-primary">
+                            <thead class="">
                                 <tr>
                                     <th>Username</th>
                                     <th>Address</th>

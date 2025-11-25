@@ -46,9 +46,9 @@ $volunteers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #121212;
-            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            background: whitesmoke;
+            color: black;
         }
 
         #sidebar {
@@ -94,22 +94,23 @@ $volunteers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         table.dataTable thead {
-            background: #2c2c2c;
+            background: white;
+            color: black;
         }
 
         .table-dark th,
         .table-dark td {
-            color: #fff;
+            color: black;
         }
 
         .card {
             border-radius: 12px;
-            background: #1e1e1e;
+            background: white;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .stat-card {
-            background: #1e1e1e;
+            background: whitesmoke;
             border-radius: 14px;
             padding: 20px;
             text-align: center;
@@ -138,6 +139,17 @@ $volunteers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             background: rgba(157, 255, 107, 0.15);
             color: #9dff6b;
         }
+
+        #topbar {
+            background-color: white;
+            color: black;
+            padding: 10px 20px;
+            display: flex;
+            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
     </style>
 </head>
 
@@ -154,7 +166,7 @@ $volunteers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-list-check"></i><span class="text">Volunteer Assignment</span></a></li>
             <li class="nav-item"><a href="make_announcement.php" class="nav-link"><i class="bi bi-megaphone-fill"></i><span class="text">Announcement</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear-fill"></i><span class="text">Settings</span></a></li>
-            <li class="nav-item"><a href="../rfid" class="nav-link"><i class="bi bi-person-badge-fill"></i><span class="text">Attendance</span></a></li>
+            <li class="nav-item"><a href="../rfid/" class="nav-link"><i class="bi bi-person-badge-fill"></i><span class="text">Attendance</span></a></li>
             <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
         </ul>
     </div>
@@ -162,13 +174,20 @@ $volunteers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Main Content -->
 
     <div id="content">
-        <h2 class="mb-4">Assign Assistance Requests</h2>
+        <!-- <h2 class="mb-4">Assign Assistance Requests</h2> -->
+        <div id="topbar">
+            <h4>Assign Assistance Requests</h4>
+            <div>
+                <i class="bi bi-person-circle fs-4"></i> Admin
+            </div>
+        </div>
+
         <?php if (!empty($message)): ?>
             <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
 
         <div class="card p-3">
-            <table id="requestsTable" class="table table-dark table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <table id="requestsTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
                 <thead>
                     <tr>
                         <th>ID</th>

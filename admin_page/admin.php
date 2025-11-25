@@ -1,15 +1,15 @@
 <?php
+session_start();
 
-$config = require __DIR__ . '/config.php';
+$admin_id = $_SESSION['admin_id'];
+$admin_uname = $_SESSION['admin_username'];
 
-// Connect to database
-try {
-  $pdo = new PDO($config['db']['dsn'], $config['db']['user'], $config['db']['pass'], [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-  ]);
-} catch (PDOException $e) {
-  die("DB connection failed: " . $e->getMessage());
+if (!isset($admin_id) && !isset($admin_uname)) {
+  header("Location: ../login.php");
+  exit();
 }
+
+include __DIR__ . '/../db_connect.php';
 
 // New Requests (Pending)
 $stmt = $pdo->query("SELECT COUNT(*) as pending_count FROM assistance_requests WHERE status='Pending'");
@@ -48,6 +48,21 @@ $stmt = $pdo->query("
     ORDER BY ar.requested_at DESC
 ");
 $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch age counts
+$stmt = $pdo->query("SELECT age, COUNT(*) as count FROM users GROUP BY age ORDER BY count DESC LIMIT 5");
+$topAges = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$ageLabels = [];
+$ageValues = [];
+
+foreach ($topAges as $row) {
+  $ageLabels[] = $row['age'];
+  $ageValues[] = $row['count'];
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -66,10 +81,13 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
+
+      font-family: 'Poppins', sans-serif;
+      background-color: whitesmoke;
       color: #fff;
     }
 
@@ -117,22 +135,23 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .card {
       border-radius: 12px;
-      background-color: #1e1e1e;
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background-color: white;
+      color: black;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
     }
 
     .table-dark th,
     .table-dark td {
-      color: #fff;
+      color: black;
     }
 
     .table-dark thead {
-      background-color: #2c2c2c;
+      background-color: white;
     }
 
     #topbar {
-      background-color: #1c1c1c;
+      background-color: white;
+      color: black;
       padding: 10px 20px;
       display: flex;
       justify-content: space-between;
@@ -150,18 +169,13 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .stat-card {
-      background: linear-gradient(135deg, #1e1e1e 0%, #2b2b2b 100%);
+      background: white;
       border-radius: 14px;
       padding: 20px;
-      color: #ffffff;
+      color: black;
       text-align: center;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
       transition: 0.3s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
     }
 
     .stat-icon {
@@ -290,12 +304,32 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     </div>
 
+    <!-- Graph Row -->
+    <div class="row mt-2 g-4">
+
+      <div class="card p-3 shadow-sm col-md-6">
+        <h5 class="text-center mb-3 fw-bold">Gender Distribution</h5>
+        <div style="height: 260px;">
+          <canvas id="genderChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card p-3 shadow-sm col-md-6">
+        <h5 class="text-center mb-3 fw-bold">Most Common Age Count</h5>
+        <div style="height: 260px;">
+          <canvas id="ageChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+
 
 
     <!-- Assistance Requests Table -->
     <div class="card mt-4 p-3">
       <h5 class="mb-3">Assistance Requests</h5>
-      <table id="requestsTable" class="table table-dark table-striped table-bordered dt-responsive nowrap" style="width:100%">
+      <table id="requestsTable" class="table  table-striped table-bordered dt-responsive nowrap" style="width:100%">
         <thead>
           <tr>
             <th>ID</th>
@@ -316,7 +350,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($req['request_type']) ?></td>
                 <td><?= htmlspecialchars($req['description']) ?></td>
                 <td><?= htmlspecialchars($req['location']) ?></td>
-                
+
                 <td>
                   <?php
                   $status = strtolower($req['status']);
@@ -380,6 +414,162 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
           }
         }
       });
+    });
+
+    //for graphs
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Basic safety checks
+
+
+      const genderCanvas = document.getElementById('genderChart');
+      const ageCanvas = document.getElementById('ageChart');
+
+      if (!genderCanvas || !ageCanvas) {
+        console.error('One or both canvas elements missing: genderChart, ageChart');
+        return;
+      }
+
+      // Helper: detect prefers-reduced-motion
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        console.info('User prefers reduced motion — Chart animations may be disabled by the OS/browser.');
+      }
+
+      // Create gradients (recreate after each context to avoid stale gradient when resizing)
+      const gCtx = genderCanvas.getContext('2d');
+      const aCtx = ageCanvas.getContext('2d');
+
+      const genderGradient = gCtx.createLinearGradient(0, 0, 0, genderCanvas.height || 300);
+      genderGradient.addColorStop(0, 'rgba(54, 162, 235, 0.45)');
+      genderGradient.addColorStop(1, 'rgba(54, 162, 235, 0)');
+
+      const ageGradient = aCtx.createLinearGradient(0, 0, 0, ageCanvas.height || 300);
+      ageGradient.addColorStop(0, 'rgba(75, 192, 192, 0.45)');
+      ageGradient.addColorStop(1, 'rgba(75, 192, 192, 0)');
+
+      // Build chart configs with explicit animation settings
+      const genderConfig = {
+        type: 'line',
+        data: {
+          labels: ['Male', 'Female'],
+          datasets: [{
+            data: [<?= (int)$maleUsers ?>, <?= (int)$femaleUsers ?>],
+            fill: true,
+            backgroundColor: genderGradient,
+            borderColor: '#1d9bf0',
+            borderWidth: 3,
+            tension: 0.35,
+            pointRadius: 6,
+            pointHoverRadius: 10,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: prefersReducedMotion ? 0 : 1500,
+            easing: 'easeInOutQuart',
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0,0,0,0.78)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              padding: 10,
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              }
+            }
+          }
+        }
+      };
+
+      const ageConfig = {
+        type: 'line',
+        data: {
+          labels: <?= json_encode($ageLabels) ?>,
+          datasets: [{
+            data: <?= json_encode($ageValues) ?>,
+            fill: true,
+            backgroundColor: ageGradient,
+            borderColor: '#0fb9b1',
+            borderWidth: 3,
+            tension: 0.35,
+            pointRadius: 6,
+            pointHoverRadius: 10,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: prefersReducedMotion ? 0 : 1800,
+            easing: 'easeOutExpo',
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0,0,0,0.78)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              padding: 10,
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              }
+            }
+          }
+        }
+      };
+
+      // Create charts
+      let genderChart, ageChart;
+      try {
+        genderChart = new Chart(gCtx, genderConfig);
+        ageChart = new Chart(aCtx, ageConfig);
+      } catch (err) {
+        console.error('Chart creation error:', err);
+        return;
+      }
+
+      // Force a reset + update to play the animation even when chart was rendered offscreen previously
+      try {
+        // reset() sets internal elements to initial state; update() triggers animation
+        genderChart.reset();
+        genderChart.update();
+
+        ageChart.reset();
+        ageChart.update();
+      } catch (err) {
+        // Some Chart.js builds may not expose reset() in older versions — try fallback
+        console.warn('Reset/update fallback:', err);
+        try {
+          genderChart.update();
+          ageChart.update();
+        } catch (e) {
+          console.error('Chart update error:', e);
+        }
+      }
+
+      // Debug logs
+      console.info('Charts created. Animation duration (gender):', genderConfig.options.animation.duration,
+        ' age:', ageConfig.options.animation.duration);
     });
   </script>
 </body>

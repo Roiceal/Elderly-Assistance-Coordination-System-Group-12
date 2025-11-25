@@ -1,10 +1,17 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['phone'])) {
   header("location:dashboard_elders.php");
   exit();
+}else if (isset($_SESSION['volunteer_id']) && isset($_SESSION['volunteer_username']) && isset($_SESSION['volunteer_phone'])) {
+  header("location:volunteer/volunteer_dashboard.php");
+  exit();
+}else if (isset($_SESSION['admin_id']) && isset($_SESSION['admin_username'])) {
+  header("location:admin_page/admin.php");
+  exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,6 +26,7 @@ if (isset($_SESSION['user_id'])) {
 
   <style>
     body {
+      font-family: 'Poppins', sans-serif;
       background-color: #f8f9fa;
       height: 100vh;
       display: flex;
@@ -38,7 +46,7 @@ if (isset($_SESSION['user_id'])) {
     }
 
     .title {
-      color: #0d6efd;
+      color: #1f4f3c ;
       font-weight: bold;
     }
 
@@ -51,14 +59,21 @@ if (isset($_SESSION['user_id'])) {
     }
 
     h2 {
-      color: #0d6efd;
+      color: #1f4f3c ;
       font-weight: bold;
     }
 
-    .link {
+    .btn{
+      background-color: #2a7f62 ;
+      border: none;
+    }
+    .btn:hover{
+      background-color: #1f4f3c ;
+    }
+
+    a{
       text-decoration: none;
-      border-radius: 50px;
-      color: white;
+      color: #2a7f62 ;
     }
 
     
@@ -86,13 +101,20 @@ if (isset($_SESSION['user_id'])) {
 
               <form action="login_process.php" method="post">
                 <div class="mb-3">
-                  <label for="pnumber" class="form-label">Username</label>
                   <input type="text" class="form-control" id="username" name="username" placeholder="Enter your Username">
                 </div>
 
                 <div class="mb-3">
-                  <label for="password" class="form-label">Password</label>
                   <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+                </div>
+
+                <div class="mb-2">
+                  <select class="form-select" id="role" name="role" required>
+                    <option value="" selected disabled>Select Role</option>
+                    <option value="Elder">Elder</option>
+                    <option value="Volunteer">Volunteer</option>
+                    <option value="Admin">Admin</option>
+                  </select>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -100,17 +122,17 @@ if (isset($_SESSION['user_id'])) {
                     <input type="checkbox" class="form-check-input" id="rememberMe">
                     <label class="form-check-label" for="rememberMe">Remember me</label>
                   </div>
-                  <a href="#" class="text-primary link">Forgot password?</a>
+                  <a href="#" >Forgot password?</a>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                <button type="submit" class="btn btn-primary w-100 mb-3 ">Login</button>
 
 
                 <p class="text-center mb-0">
                   Don't have an account?
-                  <a href="index.php" class="text-primary">Register here</a>
+                  <a href="index.php" class="">Register here</a>
                   <br>or<br>
-                  <a href="volunteer/volunteer_register.php" class="text-primary">Register as a volunteer</a>
+                  <a href="volunteer/volunteer_register.php" class="">Register as a volunteer</a>
                 </p>
               </form>
             </div>

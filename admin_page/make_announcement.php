@@ -47,9 +47,9 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #fff;
+           font-family: 'Poppins', sans-serif;
+            background-color: whitesmoke;
+            color: black;
         }
 
         #sidebar {
@@ -96,22 +96,14 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         .card {
             border-radius: 12px;
-            background-color: #1e1e1e;
-            color: #fff;
+            background-color: white;
+            color: black;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .table-dark th,
-        .table-dark td {
-            color: #fff;
-        }
-
-        .table-dark thead {
-            background-color: #2c2c2c;
-        }
-
         #topbar {
-            background-color: #1c1c1c;
+            background-color: white;
+            color: black;
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
@@ -140,10 +132,10 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <li class="nav-item"><a href="admin.php" class="nav-link"><i class="bi bi-speedometer2"></i><span class="text">Dashboard</span></a></li>
             <li class="nav-item"><a href="userslist.php" class="nav-link"><i class="bi bi-people-fill"></i><span class="text">Users</span></a></li>
             <li class="nav-item"><a href="map/location_map.php" class="nav-link"><i class="bi bi-geo-alt-fill"></i><span class="text">Locate Elder</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-list-check"></i><span class="text">Volunteer Assignment</span></a></li>
+            <li class="nav-item"><a href="assign_volunteer.php" class="nav-link"><i class="bi bi-list-check"></i><span class="text">Volunteer Assignment</span></a></li>
             <li class="nav-item"><a href="make_announcement.php" class="nav-link"><i class="bi bi-megaphone-fill"></i><span class="text">Announcement</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear-fill"></i><span class="text">Settings</span></a></li>
-            <li class="nav-item"><a href="../rfid" class="nav-link"><i class="bi bi-person-badge-fill"></i><span class="text">Attendance</span></a></li>
+            <li class="nav-item"><a href="../rfid/" class="nav-link"><i class="bi bi-person-badge-fill"></i><span class="text">Attendance</span></a></li>
             <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
         </ul>
     </div>
@@ -162,11 +154,11 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <h3 class="text-center mb-4">📩 Send SMS Message</h3>
 
-                <form action="../send_message/send_sms.php" method="POST">
+                <!-- <form action="../send_message/send_sms.php" method="POST">
 
 
 
-                    <!-- Message -->
+                  
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Message</label>
                         <textarea name="message" class="form-control" rows="4" placeholder="Type your message..." required></textarea>
@@ -176,6 +168,16 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         Send Message
                     </button>
 
+                </form> -->
+
+                <form action="../send_message/send_sms.php" method="POST"> <!-- Category Selector -->
+                    <div class="mb-3"> <label class="form-label fw-semibold">Send To</label> <select name="category" class="form-select" required>
+                            <option value="" disabled selected>Select category</option>
+                            <option value="elders">Elders</option>
+                            <option value="volunteers">Volunteers</option>
+                            <option value="admin">Admin</option>
+                        </select> </div> <!-- Message -->
+                    <div class="mb-3"> <label class="form-label fw-semibold">Message</label> <textarea name="message" class="form-control" rows="4" placeholder="Type your message..." required></textarea> </div> <button type="submit" class="btn btn-primary w-100 py-2">Send Message</button>
                 </form>
 
             </div>
