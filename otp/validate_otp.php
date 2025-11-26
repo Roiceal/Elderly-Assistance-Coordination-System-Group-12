@@ -134,51 +134,53 @@ if (!$row) {
         <div class="message <?= $success ? 'success' : 'error' ?>"><?= htmlspecialchars($message) ?></div>
 
         <?php if ($success):
+
             if (!isset($_SESSION['reg_data'])) {
                 die("No registration data found. Please register again.");
             }
 
             $data = $_SESSION['reg_data'];
 
-            // Handle profile image folder
-            $profile_path = null;
-            if (!empty($data['profile_image_file']) && isset($data['profile_image_file']['tmp_name'])) {
-                $uploadDir = __DIR__ . '/../uploads/profile_pics/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
+            // Assign variables
+            $fname   = $data['fname'];
+            $lname   = $data['lname'];
+            $phone   = $data['phone'];
+            $age     = $data['age'];
+            $gender  = $data['gender'];
+            $uname   = $data['uname'];
+            $hashedPassword = $data['password']; // Already hashed earlier
+            $imageData = $data['profile_image'] ?? null; // binary data or null
 
-                $fileExt = pathinfo($data['profile_image_file']['name'], PATHINFO_EXTENSION);
-                $fileName = uniqid('profile_', true) . '.' . $fileExt;
-                $targetFile = $uploadDir . $fileName;
-
-                if (move_uploaded_file($data['profile_image_file']['tmp_name'], $targetFile)) {
-                    // Save relative path to DB
-                    $profile_path = 'uploads/profile_pics/' . $fileName;
-                }
-            }
-
-            // Insert user with profile image path
-            $insert = $pdo->prepare("
-        INSERT INTO users (first_name, last_name, phone, username, password, senior_id, profile_image)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+            // Prepare the INSERT query using your preferred style
+            $stmt = $pdo->prepare("
+        INSERT INTO users 
+            (first_name, last_name, phone, age, gender, username, password, profile_image)
+        VALUES 
+            (:fname, :lname, :phone, :age, :gender, :uname, :password, :profile_image)
     ");
-            $insert->execute([
-                $data['fname'],
-                $data['lname'],
-                $data['phone'],
-                $data['uname'],
-                $data['password'],
-                $data['seniorId'],
-                $profile_path
-            ]);
 
+            // Bind parameters EXACTLY how you wanted
+            $stmt->bindParam(':fname', $fname);
+            $stmt->bindParam(':lname', $lname);
+            $stmt->bindParam(':phone', $phone);
+            $stmt->bindParam(':age', $age);
+            $stmt->bindParam(':gender', $gender);
+            $stmt->bindParam(':uname', $uname);
+            $stmt->bindParam(':password', $hashedPassword);
+            $stmt->bindParam(':profile_image', $imageData, PDO::PARAM_LOB);
+
+            // Execute
+            $successInsert = $stmt->execute();
+
+            // Clear registration data
             unset($_SESSION['reg_data']);
         ?>
             <a href="../login.php" class="btn">Proceed to Login</a>
+
         <?php else: ?>
             <a href="verify_otp.php?phone=<?= htmlspecialchars($phone) ?>" class="btn">Try Again</a>
         <?php endif; ?>
+
     </div>
 </body>
 

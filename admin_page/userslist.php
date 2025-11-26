@@ -2,8 +2,11 @@
 session_start();
 include __DIR__ . '/../db_connect.php';
 // Fetch all users
-$stmt = $pdo->query("SELECT id, first_name, last_name, username, phone, senior_id, created_at FROM users ORDER BY id DESC");
+$stmt = $pdo->query("SELECT * FROM users ORDER BY id DESC");
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $pdo->query("SELECT * FROM volunteers ORDER BY id DESC");
+$vol = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -101,6 +104,42 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .btn-action {
       margin-right: 5px;
     }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 100px !important;
+      /* fits 80px image perfectly */
+      min-width: 100px !important;
+      max-width: 100px !important;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .nav-link.active {
+      color: black;
+    }
+
+    .nav-link {
+      color: black;
+    }
+
+    .nav-link:hover {
+      color: darkgrey;
+    }
+
+
+
+    .profile-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #c5e1dc;
+    }
+
+    .container {
+      padding: 0px;
+    }
   </style>
 
 </head>
@@ -132,45 +171,108 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <h4>Users Management</h4>
       <div><i class="bi bi-person-circle fs-4"></i> Admin</div>
     </div>
-    <div class="card p-3">
-      <h5 class="mb-3">Registered Users</h5>
 
-      <table id="usersTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Username</th>
-            <th>Phone</th>
-            <th>Created At</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if (!empty($users)): ?>
-            <?php foreach ($users as $user): ?>
+
+    <div class="container">
+      <h5 class="mb-3">Registered Users</h5>
+      <!-- TABS -->
+      <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="activity-tab" data-bs-toggle="tab"
+            data-bs-target="#activity" type="button" role="tab">
+            Elder Users
+          </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="health-tab" data-bs-toggle="tab"
+            data-bs-target="#volunteers" type="button" role="tab">
+            Volunteer Users
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <!-- ACTIVITY TAB -->
+        <div class="tab-pane fade show active" id="activity" role="tabpanel">
+
+          <table id="usersTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
               <tr>
-                <td><?= htmlspecialchars($user['id']) ?></td>
-                <td><?= htmlspecialchars($user['first_name']) ?></td>
-                <td><?= htmlspecialchars($user['last_name']) ?></td>
-                <td><?= htmlspecialchars($user['username']) ?></td>
-                <td><?= htmlspecialchars($user['phone']) ?></td>
-                <td><?= htmlspecialchars(date('Y-m-d H:i', strtotime($user['created_at']))) ?></td>
-                <td>
-                  <a href="edit_user.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-primary btn-action">Edit</a>
-                  <a href="delete_user.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-danger btn-action" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-                </td>
+                <th>Profile Image</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>Created At</th>
               </tr>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <tr>
-              <td colspan="7" class="text-center">No users found</td>
-            </tr>
-          <?php endif; ?>
-        </tbody>
-      </table>
+            </thead>
+
+            <tbody>
+              <?php if (!empty($users)): ?>
+                <?php foreach ($users as $user): ?>
+                  <tr>
+                    <td><img src="data:image/jpeg;base64,<?= base64_encode($user['profile_image']) ?>" class="profile-img"></td>
+                    <td><?= htmlspecialchars($user['first_name']) ?></td>
+                    <td><?= htmlspecialchars($user['last_name']) ?></td>
+                    <td><?= htmlspecialchars($user['username']) ?></td>
+                    <td><?= htmlspecialchars($user['phone']) ?></td>
+                    <td><?= htmlspecialchars(date('Y-m-d H:i', strtotime($user['created_at']))) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <tr>
+                  <td colspan="7" class="text-center">No users found</td>
+                </tr>
+              <?php endif; ?>
+            </tbody>
+          </table>
+
+        </div>
+
+        <!-- VOLUNTEER TAB -->
+        <div class="tab-pane fade" id="volunteers" role="tabpanel">
+
+          <table id="volunteerTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
+              <tr>
+                <th>Profile Image</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <?php if (!empty($vol)): ?>
+                <?php foreach ($vol as $v): ?>
+                  <tr>
+                    <td><img src="data:image/jpeg;base64,<?= base64_encode($v['profile_image']) ?>" class="profile-img"></td>
+                    <td><?= htmlspecialchars($v['fname']) ?></td>
+                    <td><?= htmlspecialchars($v['lname']) ?></td>
+                    <td><?= htmlspecialchars($v['username']) ?></td>
+                    <td><?= htmlspecialchars($v['phone']) ?></td>
+                    <td><?= htmlspecialchars(date('Y-m-d H:i', strtotime($v['created_at']))) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <tr>
+                  <td colspan="7" class="text-center">No volunteers found</td>
+                </tr>
+              <?php endif; ?>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
     </div>
+
+
+
+
+
+
 
   </div>
 
@@ -204,6 +306,15 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ],
         language: {
           searchPlaceholder: "Search users...",
+          search: ""
+        }
+      });
+
+      $('#volunteerTable').DataTable({
+        responsive: true,
+        pageLength: 10,
+        language: {
+          searchPlaceholder: "Search volunteers...",
           search: ""
         }
       });

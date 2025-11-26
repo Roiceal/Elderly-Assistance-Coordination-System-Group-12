@@ -152,7 +152,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
             <div class="card shadow-lg p-4" style="width: 450px; border-radius: 15px;">
 
-                <h3 class="text-center mb-4">📩 Send SMS Message</h3>
+                <h3 class="text-center mb-4">📩 Send Announcement Message</h3>
 
                 <!-- <form action="../send_message/send_sms.php" method="POST">
 

@@ -305,30 +305,34 @@ foreach ($topAges as $row) {
     </div>
 
     <!-- Graph Row -->
-    <div class="row mt-2 g-4">
 
-      <div class="card p-3 shadow-sm col-md-6">
+    <!-- Graph Row -->
+    <div class="d-flex mt-4" style="gap: 20px; flex-wrap: nowrap;">
+      <div class="card p-3 shadow-sm w-50">
         <h5 class="text-center mb-3 fw-bold">Gender Distribution</h5>
         <div style="height: 260px;">
           <canvas id="genderChart"></canvas>
         </div>
       </div>
 
-      <div class="card p-3 shadow-sm col-md-6">
+      <div class="card p-3 shadow-sm w-50">
         <h5 class="text-center mb-3 fw-bold">Most Common Age Count</h5>
         <div style="height: 260px;">
           <canvas id="ageChart"></canvas>
         </div>
       </div>
-
     </div>
+
+
+   
+
 
 
 
 
     <!-- Assistance Requests Table -->
     <div class="card mt-4 p-3">
-      <h5 class="mb-3">Assistance Requests</h5>
+      <h5 class="mb-3 text-center fw-bold">Assistance Requests</h5>
       <table id="requestsTable" class="table  table-striped table-bordered dt-responsive nowrap" style="width:100%">
         <thead>
           <tr>

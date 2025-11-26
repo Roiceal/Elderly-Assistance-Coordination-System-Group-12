@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+include "db_connect.php"; // adjust path if needed
+
 $user_id = $_SESSION['user_id'];
 $user_phone = $_SESSION['phone'];
 $username = $_SESSION['username'];
@@ -9,6 +11,10 @@ if (!isset($user_id) && !isset($username) && !isset($username)) {
     header("location:login.php");
     exit();
 }
+
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -84,10 +90,6 @@ if (!isset($user_id) && !isset($username) && !isset($username)) {
             transition: transform 0.2s;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
 
@@ -103,8 +105,8 @@ if (!isset($user_id) && !isset($username) && !isset($username)) {
            ============================ */
 
         .welcome-box {
-            background: linear-gradient(135deg, #4c6ef5, #7950f2);
-            color: white;
+            background: white;
+            color: #1f4f3c;
             padding: 35px;
             border-radius: 20px;
             position: relative;
@@ -232,21 +234,35 @@ if (!isset($user_id) && !isset($username) && !isset($username)) {
 
     <!-- Main Content -->
     <div id="content">
+        <div class="d-flex align-items-center mb-3 p-4 bg-white rounded shadow-sm dashboard-header"
+            style="border-left: 6px solid #1f4f3c;">
 
-        <!-- ⭐ Modern Welcome Header ⭐ -->
-        <div class="welcome-box mb-4 fade-in">
-            <div class="circle1 welcome-circle"></div>
-            <div class="circle2 welcome-circle"></div>
+            <!-- Profile Image -->
+            <div class="me-4">
+                <img
+                    src="data:image/jpeg;base64,<?= base64_encode($user['profile_image']) ?>"
+                    alt="Profile"
+                    class="rounded-circle shadow-sm"
+                    style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #1f4f3c;">
+            </div>
 
-            <h1>Hello, <?php echo $_SESSION['username']; ?>! 👋</h1>
-            <p>Your safety, health, and comfort are our top priority. How can we assist you today?</p>
+            <!-- Text -->
+            <div>
+                <h1 class="m-0 fw-bold" style="text-transform: uppercase; font-size: 2.5rem; color:#1f4f3c;">
+                    Welcome, <?= htmlspecialchars($user['first_name']) ?>!
+                </h1>
+                <p class="m-0 mt-2" style="color:#3c6e57; font-size: 1.25rem;">
+                    Your safety, health, and comfort are our top priority. How can we assist you today?
+                </p>
+            </div>
+
         </div>
 
         <!-- Dashboard Cards -->
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="card p-3">
-                    <i class="bi bi-bell fs-2 text-primary"></i>
+                    <i class="bi bi-bell fs-2 text-success"></i>
                     <h5 class="mt-2">Request Assistance</h5>
                     <p class="mt-2">Get help whenever you need it</p>
                     <a href="request_assistance.php" class="btn btn-primary btn-sm">Request</a>
@@ -255,7 +271,7 @@ if (!isset($user_id) && !isset($username) && !isset($username)) {
 
             <div class="col-md-4">
                 <div class="card p-3">
-                    <i class="bi bi-heart fs-2 text-danger"></i>
+                    <i class="bi bi-heart fs-2 text-success"></i>
                     <h5 class="mt-2">Health & Wellness</h5>
                     <p>Access exercise routines, diet tips, and reminders.</p>
                     <a href="#" class="btn btn-danger btn-sm">Explore</a>
@@ -323,7 +339,7 @@ if (!isset($user_id) && !isset($username) && !isset($username)) {
                     .then(r => r.text())
                     .then(txt => {
                         console.log("RAW RESPONSE:", txt);
-                        status.textContent = txt;
+                        status.textContent = "Location saved!";
                     });
 
             }, err => {

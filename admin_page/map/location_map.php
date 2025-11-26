@@ -108,7 +108,6 @@ $locations = $stmt->fetchAll();
             width: 100%;
             height: 600px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .table-container {
@@ -136,6 +135,13 @@ $locations = $stmt->fetchAll();
                 max-height: none;
             }
         }
+
+        .colDiv {
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            margin: 5px;
+        }
     </style>
 </head>
 
@@ -145,10 +151,10 @@ $locations = $stmt->fetchAll();
     <div id="sidebar" class="d-none d-md-block">
         <button class="btn btn-sm btn-outline-light mb-3 ms-3" id="toggleSidebar"><i class="bi bi-list"></i></button>
         <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a href="admin.php" class="nav-link"><i class="bi bi-speedometer2"></i><span class="text">Dashboard</span></a></li>
+            <li class="nav-item"><a href="../admin.php" class="nav-link"><i class="bi bi-speedometer2"></i><span class="text">Dashboard</span></a></li>
             <li class="nav-item"><a href="../userslist.php" class="nav-link"><i class="bi bi-people"></i><span class="text">Users</span></a></li>
-            <li class="nav-item"><a href="map/location_map.php" class="nav-link"><i class="bi bi-bell"></i><span class="text">Locate Elder</span></a></li>
-             <li class="nav-item"><a href="../assign_volunteer.php" class="nav-link"><i class="bi bi-list-check"></i><span class="text">Volunteer Assignment</span></a></li>
+            <li class="nav-item"><a href="" class="nav-link"><i class="bi bi-bell"></i><span class="text">Locate Elder</span></a></li>
+            <li class="nav-item"><a href="../assign_volunteer.php" class="nav-link"><i class="bi bi-list-check"></i><span class="text">Volunteer Assignment</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
             <li class="nav-item"><a href="../make_announcement.php" class="nav-link"><i class="bi bi-graph-up"></i><span class="text">Annoucement</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
@@ -165,19 +171,21 @@ $locations = $stmt->fetchAll();
                 <i class="bi bi-person-circle fs-4"></i> Admin
             </div>
         </div>
-        <div class="container-fluid">
-            <div class="row g-4">
+
+        <div class="container-fluid d-flex justify-content-center align-items-start">
+            <div class="row g-4 justify-content-center w-100">
+
                 <!-- Column 1: Map -->
-                <div class="col-lg-5">
-                    <div id="map"></div>
+                <div class="colDiv col-sm-5 d-flex justify-content-center">
+                    <div id="map" style="width:100%; height:600px; border-radius:10px;"></div>
                 </div>
 
                 <!-- Column 2: Table -->
-                <div class="col-lg-7">
-                    <div class="table-container">
-                        <h4>Saved Locations</h4>
+                <div class="colDiv col-sm-5 d-flex justify-content-center">
+                    <div class="table-container w-100">
+                        <h4 class="text-center mb-3">Saved Locations</h4>
                         <table class="table table-bordered table-striped" id="locationsTable">
-                            <thead class="">
+                            <thead>
                                 <tr>
                                     <th>Username</th>
                                     <th>Address</th>
@@ -206,9 +214,11 @@ $locations = $stmt->fetchAll();
                         </table>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

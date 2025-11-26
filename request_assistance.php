@@ -22,7 +22,7 @@ session_start();
         /* Sidebar */
         #sidebar {
             width: 250px;
-            background: black;
+            background: #1f4f3c ;
             color: #fff;
             transition: 0.3s;
             position: fixed;
@@ -74,8 +74,12 @@ session_start();
             margin: auto;
         }
 
+        .btn:hover {
+            background-color: #14532d !important;
+        }
+
         .form-card h2 {
-            color: #0d6efd;
+            color: #1f4f3c ;
             font-weight: bold;
         }
 
@@ -103,10 +107,8 @@ session_start();
             <i class="bi bi-list"></i>
         </button>
         <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a href="dashboard2.php" class="nav-link"><i class="bi bi-house"></i><span class="text">Home</span></a></li>
-            <li class="nav-item"><a href="profile.php" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
-            <li class="nav-item"><a href="assistance_request_form.php" class="nav-link"><i class="bi bi-bell"></i><span class="text">Request Assistance</span></a></li>
-            <li class="nav-item"><a href="health.php" class="nav-link"><i class="bi bi-heart"></i><span class="text">Health & Wellness</span></a></li>
+            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i><span class="text">Home</span></a></li>
+            <li class="nav-item"><a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
             <li class="nav-item"><a href="events.php" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
             <li class="nav-item"><a href="settings.php" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
             <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
@@ -116,7 +118,7 @@ session_start();
     <!-- Main Content -->
     <div id="content">
         <div class="form-card mt-5">
-            <h2 class="mb-3"><i class="bi bi-bell"></i> Request Assistance</h2>
+            <h2 class="mb-3"><i class="bi bi-bell text-success"></i> Request Assistance</h2>
             <p class="text-muted mb-4">Submit your request and our caregivers will respond promptly.</p>
 
             <!-- Success Alert -->
@@ -153,7 +155,7 @@ session_start();
                     <input type="text" class="form-control" id="location" name="location" placeholder="Your address or location" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">Submit Request</button>
+                <button type="submit" class="btn btn-success w-100">Submit Request</button>
             </form>
         </div>
     </div>

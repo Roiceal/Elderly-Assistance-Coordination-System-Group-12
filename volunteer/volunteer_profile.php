@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 250px;
             position: fixed;
             height: 100vh;
-            background: #343a40;
+            background: #1f4f3c;
             color: #fff;
             padding-top: 20px;
             transition: 0.3s;
@@ -113,17 +113,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height: 150px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #4a90e2;
+            border: 4px solid #c5e1dc;
             margin-bottom: 20px;
         }
 
         .btn-primary {
-            background: #4a90e2;
+            background: #2a7f62;
             border: none;
         }
 
         .btn-primary:hover {
-            background: #357ABD;
+            background: #1f4f3c;
         }
 
         @media(max-width:768px) {

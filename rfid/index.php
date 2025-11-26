@@ -1,8 +1,7 @@
-
-
 <!doctype html>
 
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,14 +28,40 @@
       padding-top: 20px;
       transition: width 0.3s;
     }
-    #sidebar.collapsed { width: 70px; }
-    #sidebar .nav-link { color: #fff; padding: 12px 20px; display: flex; align-items: center; gap: 15px; border-radius: 8px; transition: all 0.2s; }
-    #sidebar .nav-link:hover { background-color: #333; padding-left: 25px; }
-    #sidebar.collapsed .text { display: none; }
+
+    #sidebar.collapsed {
+      width: 70px;
+    }
+
+    #sidebar .nav-link {
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    #sidebar .nav-link:hover {
+      background-color: #333;
+      padding-left: 25px;
+    }
+
+    #sidebar.collapsed .text {
+      display: none;
+    }
 
     /* Content */
-    #content { margin-left: 250px; transition: margin-left 0.3s; padding: 20px; }
-    #content.expanded { margin-left: 70px; }
+    #content {
+      margin-left: 250px;
+      transition: margin-left 0.3s;
+      padding: 20px;
+    }
+
+    #content.expanded {
+      margin-left: 70px;
+    }
 
     /* RFID Card */
     .main-container {
@@ -50,17 +75,19 @@
 
     .rfid-card {
       width: 320px;
-      background: linear-gradient(135deg, #4c6ef5, #7950f2);
+      background: #1c1c1c;
       color: white;
       border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       padding: 0;
       transition: transform 0.3s, box-shadow 0.3s;
     }
+
     .rfid-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
     }
+
     .rfid-card img {
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
@@ -70,17 +97,23 @@
       margin-top: 15px;
       display: block;
     }
+
     .rfid-card .card-body {
       padding: 20px;
     }
+
     .rfid-card input.rfid {
       border-radius: 12px;
       padding: 10px;
       border: none;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
       margin-bottom: 15px;
     }
-    .rfid-card p { margin: 5px 0; font-weight: 500; }
+
+    .rfid-card p {
+      margin: 5px 0;
+      font-weight: 500;
+    }
 
     /* Attendance Log */
     .attendance-log {
@@ -88,22 +121,34 @@
       background: white;
       border-radius: 20px;
       padding: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       min-width: 500px;
     }
+
     .attendance-log .header-bar {
       border-bottom: 2px solid #e0e0e0;
       padding-bottom: 10px;
       margin-bottom: 15px;
     }
-    .attendance-log h4 { font-weight: 700; color: #343a40; }
-    .table { border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+    .attendance-log h4 {
+      font-weight: 700;
+      color: #343a40;
+    }
+
+    .table {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
     .table th {
-      background-color: #4c6ef5;
+      background-color: #1c1c1c;
       color: white;
       font-weight: 600;
       text-align: center;
     }
+
     .table td {
       vertical-align: middle;
       text-align: center;
@@ -111,16 +156,31 @@
       color: #495057;
       word-wrap: break-word;
     }
-    .table-striped>tbody>tr:nth-of-type(odd) { background-color: #f8f9fa; }
-    .table-responsive { max-height: 600px; overflow-y: auto; }
 
-    @media(max-width: 992px){
-      .main-container { flex-direction: column; align-items: center; }
-      .rfid-card, .attendance-log { width: 100%; }
+    .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #f8f9fa;
+    }
+
+    .table-responsive {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    @media(max-width: 992px) {
+      .main-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .rfid-card,
+      .attendance-log {
+        width: 100%;
+      }
     }
   </style>
 
 </head>
+
 <body>
 
   <!-- Sidebar -->
@@ -148,42 +208,42 @@
     <div class="main-container">
 
 
-  <!-- RFID Card -->
-  <div class="card rfid-card">
-    <img class="card-img-top" alt="RFID Image" id="img" src="images/iconic.png">
-    <div class="card-body">
-      <input type="text" id="rfidcard" class="form-control rfid" placeholder="Tap RFID card here">
-      <p id="name">Name: <span class="fw-bold"></span></p>
-      <p id="age">Age: <span class="fw-bold"></span></p>
-      <p id="DOB">Date of Birth: <span class="fw-bold"></span></p>
-      <p id="card_id">Card ID: <span class="fw-bold"></span></p>
-    </div>
-  </div>
+      <!-- RFID Card -->
+      <div class="card rfid-card">
+        <img class="card-img-top" alt="RFID Image" id="img" src="images/image.png">
+        <div class="card-body">
+          <input type="text" id="rfidcard" class="form-control rfid" placeholder="Tap RFID card here">
+          <p id="name">Name: <span class="fw-bold"></span></p>
+          <p id="age">Age: <span class="fw-bold"></span></p>
+          <p id="DOB">Date of Birth: <span class="fw-bold"></span></p>
+          <p id="card_id">Card ID: <span class="fw-bold"></span></p>
+        </div>
+      </div>
 
-  <!-- Attendance Log -->
-  <div class="attendance-log">
-    <div class="header-bar">
-      <h4>Attendance</h4>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-striped center">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Card ID</th>
-            <th>Address</th>
-            <th>Time In</th>
-            <th>Time Out</th>
-          </tr>
-        </thead>
-        <tbody id="attendanceTable">
-          <!-- Attendance data dynamically loaded here -->
-        </tbody>
-      </table>
-    </div>
-  </div>
+      <!-- Attendance Log -->
+      <div class="attendance-log">
+        <div class="header-bar">
+          <h4>Attendance</h4>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped center">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Card ID</th>
+                <th>Address</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceTable">
+              <!-- Attendance data dynamically loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-</div>
+    </div>
 
   </div>
 
@@ -206,4 +266,5 @@
   <script src="script.js"></script>
 
 </body>
+
 </html>

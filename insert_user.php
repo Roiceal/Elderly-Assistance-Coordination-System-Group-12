@@ -43,9 +43,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $success = $stmt->execute();
 
         if ($success) {
-            echo "<script>alert('Registration successful! You may now log in.');
-        window.location.href='../login.php';
-        </script>";
+            echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Success</title>
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body {
+        font-family: "Poppins", sans-serif;
+      background-color: whitesmoke;
+      color: #fff;
+    }</style>
+</head>
+<body>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Swal.fire({
+            icon: "success",
+            title: "Regiter Successful",
+            text: "Register successful",
+            timer: 3000,
+            showConfirmButton: false
+        }).then(() => {
+            window.location.href = "login.php";
+        });
+    </script>
+</body>
+</html>';
             exit;
         } else {
             die("Error: Registration failed.");

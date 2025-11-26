@@ -5,22 +5,22 @@ if (!$phone) die('Phone number is required.');
 
 session_start();
 
-// Handle uploaded profile image
-$profileImageFile = null;
-if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-    // Store the temporary file info in session
-    $profileImageFile = $_FILES['profile_image'];
-}
+// Image
+    $imageData = null;
+    if (!empty($_FILES['image']['tmp_name']) && is_uploaded_file($_FILES['image']['tmp_name'])) {
+        $imageData = file_get_contents($_FILES['image']['tmp_name']);
+    }
 
 // Store registration data TEMPORARILY in session
 $_SESSION['reg_data'] = [
     'fname' => $_POST['fname'] ?? '',
     'lname' => $_POST['lname'] ?? '',
     'phone' => $_POST['phone'] ?? '',
+    'age' => $_POST['age'] ?? '',
+    'gender' => $_POST['gender'] ?? '',
     'uname' => $_POST['uname'] ?? '',
     'password' => password_hash($_POST['password'] ?? '', PASSWORD_BCRYPT),
-    'seniorId' => $_POST['seniorId'] ?? '',
-    'profile_image_file' => $profileImageFile // store the uploaded file info
+    'profile_image' => $imageData // store the uploaded file info
 ];
 
 // Normalize phone number

@@ -4,22 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registration</title>
+  <title>Volunteer Registration</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Add jQuery -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
+  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #f8f9fa;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 40px 0;
     }
 
     .card {
@@ -33,11 +31,7 @@
       margin-bottom: 15px;
     }
 
-    h2 {
-      color: #1f4f3c;
-      font-weight: bold;
-    }
-
+    h2,
     .title {
       color: #1f4f3c;
       font-weight: bold;
@@ -45,10 +39,23 @@
 
     a {
       text-decoration: none;
-      color: #2a7f62 ;
+      color: #2a7f62;
     }
 
-    /* Optional: custom hover and focus effects */
+    .btn {
+      background-color: #2a7f62;
+      border: none;
+    }
+
+    .btn:hover {
+      background-color: #1f4f3c;
+    }
+
+    select.filled {
+      color: #2a7f62;
+      font-weight: 500;
+    }
+
     input[type="file"]:hover {
       border-color: #2a7f62;
       box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
@@ -60,30 +67,28 @@
       outline: none;
     }
 
-    .form-text {
-      color: #6c757d;
+    #passwordCriteria p {
+      margin: 0;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Change input text color when it has a value */
-    input:valid {
-      color: #2a7f62;
-      /* Example: primary blue */
-      font-weight: 500;
+    .valid {
+      color: green;
+      font-weight: bold;
     }
 
-    /* For select elements */
-    select.filled {
-      color: #2a7f62;
-      font-weight: 500;
+    .invalid {
+      color: red;
+      font-weight: bold;
     }
 
-    .btn{
-      background-color: #2a7f62;
-      border: none;
-    }
-
-    .btn:hover {
-      background-color: #1f4f3c;
+    .form-warning {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -91,44 +96,45 @@
 <body>
 
   <div class="container">
-    <div class="row justify-content-center align-items-center">
+    <div class="row justify-content-center">
       <div class="col-lg-8 col-md-10">
-        <div class="card p-1 p-md-5 bg-white">
-          <div class="row g-1 align-items-center">
+        <div class="card p-3 p-md-5 bg-white">
+          <div class="row g-3 align-items-center">
 
-            <!-- Left side: Logo and text -->
+            <!-- LEFT SIDE -->
             <div class="col-md-6 text-center text-md-start">
               <img src="../logo.png" alt="Eldercare Logo" class="logo img-fluid">
               <h1 class="title h3 mt-2">ELDERCARE CONNECT</h1>
               <p class="text-muted">Assistance Coordination System</p>
             </div>
 
-            <!-- Right side: Form -->
+            <!-- RIGHT SIDE FORM -->
             <div class="col-md-6">
-              <h2 class="text-center mb-1">Register as a volunteer</h2>
+              <h2 class="text-center mb-2">Register as a Volunteer</h2>
 
-              <form action="register_process.php" method="post" enctype="multipart/form-data">
-                <div class="mb-3 mt-4">
-                  <input type="text" class="form-control" id="fname" name="fname" placeholder="First name" required>
+              <form id="registerForm" action="register_process.php" method="post" enctype="multipart/form-data">
+
+                <div class="mb-3 mt-3">
+                  <input type="text" class="form-control" name="fname" placeholder="First name" required>
                 </div>
 
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="lname" name="lname" placeholder="Last name" required>
+                  <input type="text" class="form-control" name="lname" placeholder="Last name" required>
                 </div>
 
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+                  <input type="text" class="form-control" name="phone" placeholder="Phone Number" required>
                 </div>
 
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <input type="number" class="form-control" id="age" name="age" min="1" placeholder="Age" required>
+                      <input type="number" class="form-control" name="age" placeholder="Age" min="1" required>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <select class="form-select" id="gender" name="gender" required>
+                      <select class="form-select" name="gender" required>
                         <option value="" selected disabled>Select gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -138,108 +144,111 @@
                   </div>
                 </div>
 
-                <!-- <div class="mb-1">
-                  <label for="image" class="form-label">Upload your image</label>
-                  <input type="file" name="image" required>
-                </div> -->
-
+                <!-- IMAGE -->
                 <div class="mb-3">
-                  <label for="image" class="form-label">Upload your image</label>
-                  <input class="form-control form-control-lg" type="file" id="image" name="image" required>
-                  <div class="form-text">Accepted formats: JPG, PNG. Max size: 2MB.</div>
+                  <label class="form-label">Upload your image</label>
+                  <input class="form-control form-control-lg" type="file" name="image" required>
+                  <div class="form-text">Accepted formats: JPG, PNG. Max 2MB.</div>
                 </div>
 
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="uname" name="uname" placeholder="Username" required>
+                  <input type="text" class="form-control" name="uname" placeholder="Username" required>
                 </div>
 
-                <div class="mb-3">
-                  <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Your Password" required>
-                  <div id="passwordHelp" class="form-text mb-2"></div>
+                <!-- PASSWORD -->
+                <div class="mb-2">
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Your Password" required>
+                </div>
+                <div id="formWarning" class="form-warning"></div>
+                <br>
+                <!-- PASSWORD CRITERIA -->
+                <div id="passwordCriteria" class="mb-3">
+                  <p id="length" class="invalid"><i class="bi bi-x-circle-fill"></i> Minimum 8 characters</p>
+                  <p id="uppercase" class="invalid"><i class="bi bi-x-circle-fill"></i> At least 1 uppercase letter</p>
+                  <p id="lowercase" class="invalid"><i class="bi bi-x-circle-fill"></i> At least 1 lowercase letter</p>
+                  <p id="number" class="invalid"><i class="bi bi-x-circle-fill"></i> At least 1 number</p>
                 </div>
 
-
+                <!-- General form warning -->
+                
 
                 <button type="submit" class="btn btn-primary w-100">Register</button>
-              </form>
-              <br>
-              <p>Already have an account?<a href="../login.php"> Login</a></p>
-            </div>
 
-          </div> <!-- row -->
-        </div> <!-- card -->
+              </form>
+
+              <br>
+              <p class="text-center">Already have an account? <a href="../login.php">Login</a></p>
+
+            </div> <!-- end of form -->
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- VALIDATION SCRIPT -->
   <script>
-    $(document).ready(function() {
-      // Change select color when a value is selected
-      $('select').on('change', function() {
-        if ($(this).val()) {
-          $(this).addClass('filled');
-        } else {
-          $(this).removeClass('filled');
+    $(document).ready(function () {
+
+      // Apply filled class on selects
+      $('select').on('change', function () {
+        $(this).toggleClass('filled', $(this).val() !== '');
+      });
+
+      // Password criteria real-time check
+      $("#password").on("keyup", function () {
+        let pass = $(this).val();
+
+        function setCriteria(selector, condition, text) {
+          $(selector)
+            .toggleClass("valid", condition)
+            .toggleClass("invalid", !condition)
+            .html(
+              (condition
+                ? '<i class="bi bi-check-circle-fill"></i> '
+                : '<i class="bi bi-x-circle-fill"></i> '
+              ) + text
+            );
         }
+
+        setCriteria("#length", pass.length >= 8, "Minimum 8 characters");
+        setCriteria("#uppercase", /[A-Z]/.test(pass), "At least 1 uppercase letter");
+        setCriteria("#lowercase", /[a-z]/.test(pass), "At least 1 lowercase letter");
+        setCriteria("#number", /\d/.test(pass), "At least 1 number");
       });
 
-      // Trigger on page load in case fields are pre-filled
-      $('select').each(function() {
-        if ($(this).val()) $(this).addClass('filled');
-      });
-    });
-
-    $(document).ready(function() {
-      // Form submit event
-      $('form').on('submit', function(e) {
+      // Form submit validation without alert
+      $("form").on("submit", function (e) {
         let valid = true;
-        let password = $('#exampleInputPassword1').val();
-
-        // Password strength regex: min 8 chars, 1 uppercase, 1 lowercase, 1 number
+        let pass = $("#password").val();
         let strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-        if (!strongPassword.test(password)) {
-          valid = false;
-          alert('Password must be at least 8 characters long and include uppercase, lowercase, and a number.');
-          $('#exampleInputPassword1').focus();
-        }
+        // Clear previous warnings
+        $("#formWarning").text("");
 
-        // Additional validations (optional)
-        $('input[required], select[required]').each(function() {
-          if ($(this).val() === '') {
+        // Required field checking
+        $("input[required], select[required]").each(function () {
+          if ($(this).val().trim() === "") {
             valid = false;
-            $(this).focus();
-            alert('Please fill out all required fields.');
-            return false; // break loop
+            $("#formWarning").text("Please fill out all required fields.");
+            return false;
           }
         });
 
-        // Prevent form submission if validation fails
+        // Password validation
+        if (!strongPassword.test(pass)) {
+          valid = false;
+          $("#formWarning").text("Password must be at least 8 characters, include uppercase, lowercase, and a number.");
+        }
+
         if (!valid) {
           e.preventDefault();
         }
       });
 
-      // Optional: real-time password strength feedback
-      $('#exampleInputPassword1').on('input', function() {
-        let pwd = $(this).val();
-        let strengthText = '';
-        if (pwd.length < 8) {
-          strengthText = 'Too short';
-        } else if (!/[A-Z]/.test(pwd)) {
-          strengthText = 'Add uppercase letter';
-        } else if (!/[a-z]/.test(pwd)) {
-          strengthText = 'Add lowercase letter';
-        } else if (!/\d/.test(pwd)) {
-          strengthText = 'Add a number';
-        } else {
-          strengthText = 'Strong password';
-        }
-        $('#passwordHelp').text(strengthText);
-      });
     });
   </script>
 
 </body>
-
 </html>

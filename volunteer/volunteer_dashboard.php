@@ -116,7 +116,7 @@ $assignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
             width: 250px;
             position: fixed;
             height: 100vh;
-            background: #343a40;
+            background: #1f4f3c;
             color: #fff;
             padding-top: 20px;
             transition: 0.3s;
@@ -137,7 +137,7 @@ $assignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         #sidebar .nav-link:hover {
-            background: #495057;
+            background: #c5e1dc;
             padding-left: 25px;
         }
 
@@ -180,10 +180,37 @@ $assignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Main Content -->
     <div id="content">
-        <div class="mb-4">
+        <!-- <div class="mb-4">
             <h2 style="text-transform: uppercase;">Welcome, <?= htmlspecialchars($volunteer['fname']) ?>!</h2>
-            <p>Your dashboard to manage assigned assistance requests.</p>
+            <p style="color:#1f4f3c;">Your dashboard to manage assigned assistance requests.</p>
+        </div> -->
+
+        <div class="d-flex align-items-center mb-3 p-4 bg-white rounded shadow-sm dashboard-header"
+            style="border-left: 6px solid #1f4f3c;">
+
+            <!-- Profile Image -->
+            <div class="me-4">
+                <img
+                    src="data:image/jpeg;base64,<?= base64_encode($volunteer['profile_image']) ?>"
+                    alt="Profile"
+                    class="rounded-circle shadow-sm"
+                    style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #1f4f3c;">
+            </div>
+
+            <!-- Text -->
+            <div>
+                <h1 class="m-0 fw-bold" style="text-transform: uppercase; font-size: 2.5rem; color:#1f4f3c;">
+                    Welcome, <?= htmlspecialchars($volunteer['fname']) ?>!
+                </h1>
+                <p class="m-0 mt-2" style="color:#3c6e57; font-size: 1.25rem;">
+                    Your dashboard to manage assigned assistance requests.
+                </p>
+            </div>
+
         </div>
+
+
+
 
         <!-- Stats -->
         <div class="row g-2 mb-4">
