@@ -71,6 +71,21 @@
                 </div>
 
                 <div class="mb-1">
+                  <label for="age" class="form-label">Age</label>
+                  <input type="number" class="form-control" id="age" name="age" min="1" required>
+                </div>
+
+                <div class="mb-2">
+                  <label for="gender" class="form-label">Gender</label>
+                  <select class="form-select" id="gender" name="gender" required>
+                    <option value="" selected disabled>Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="mb-1">
                   <label for="uname" class="form-label">Username</label>
                   <input type="text" class="form-control" id="uname" name="uname" required>
                 </div>
@@ -84,7 +99,7 @@
                 <button type="submit" class="btn btn-primary w-100">Register</button>
               </form>
               <br>
-              <p>Already have an account?<a href="volunteer_login.php">Login as a volunteer</a></p>
+              <p>Already have an account?<a href="../login.php">Login</a></p>
             </div>
 
           </div> <!-- row -->

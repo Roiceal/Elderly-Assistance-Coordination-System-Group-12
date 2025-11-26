@@ -1,50 +1,67 @@
 <?php
-// Database connection
-$host = 'localhost';
-$db   = 'otp';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
+session_start();
+// Correct path to db_connect.php
+include __DIR__ . '/../db_connect.php';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
-}
-
-
-// Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+// Check if form submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $fname = trim($_POST['fname']);
     $lname = trim($_POST['lname']);
     $phone = trim($_POST['phone']);
+    $age = intval($_POST['age']);
+    $gender = trim($_POST['gender']);
     $username = trim($_POST['uname']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // secure hashing
+    $password = $_POST['password'];
 
-    // Insert into database
-    $sql = "INSERT INTO volunteers (fname, lname, phone, username, password) 
-            VALUES (?, ?, ?, ?, ?)";
-
-    $stmt = $pdo->prepare($sql);
-
-    try {
-        $stmt->execute([$fname, $lname, $phone, $username, $password]);
-
-        // Redirect to login or success page
-        header("Location: volunteer_login.php?success=1");
-        exit;
-
-    } catch (PDOException $e) {
-        // Handle duplicate or errors
-        echo "Error: " . $e->getMessage();
+    // Check required fields
+    if (empty($fname) || empty($lname) || empty($phone) || empty($username) || empty($password)) {
+        die("Error: All fields are required.");
     }
+
+    // Check username exists
+    $stmt = $pdo->prepare("SELECT id FROM volunteers WHERE username = ?");
+    $stmt->execute([$username]);
+    if ($stmt->rowCount() > 0) {
+        die("Error: Username already taken.");
+    }
+
+    // Check phone exists
+    $stmt = $pdo->prepare("SELECT id FROM volunteers WHERE phone = ?");
+    $stmt->execute([$phone]);
+    if ($stmt->rowCount() > 0) {
+        die("Error: Phone number already used.");
+    }
+
+    // Hash password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Insert new volunteer
+    $stmt = $pdo->prepare("
+        INSERT INTO volunteers (fname, lname, phone, age, gender, username, password)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    $success = $stmt->execute([
+        $fname,
+        $lname,
+        $phone,
+        $age,
+        $gender,
+        $username,
+        $hashedPassword
+    ]);
+
+    if ($success) {
+        echo "<script>alert('Registration successful! You may now log in.');
+        window.location.href='../login.php';
+        </script>";
+        exit;
+    } else {
+        die("Error: Registration failed.");
+    }
+
+} else {
+    die("Invalid request.");
 }
 ?>

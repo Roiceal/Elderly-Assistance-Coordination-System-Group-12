@@ -78,7 +78,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="col-md-6">
               <h2 class="text-center mb-4">Register your account</h2>
 
-              <form action="otp/send_otp.php" enctype="multipart/form-data" method="post">
+              <form action="insert_user.php" enctype="multipart/form-data" method="post">
                 <div class="mb-1">
                   <label for="fname" class="form-label">First name</label>
                   <input type="text" class="form-control" id="fname" name="fname" required>
@@ -95,6 +95,21 @@ if (isset($_SESSION['user_id'])) {
                 </div>
 
                 <div class="mb-1">
+                  <label for="age" class="form-label">Age</label>
+                  <input type="number" class="form-control" id="age" name="age" min="1" required>
+                </div>
+
+                <div class="mb-2">
+                  <label for="gender" class="form-label">Gender</label>
+                  <select class="form-select" id="gender" name="gender" required>
+                    <option value="" selected disabled>Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="mb-1">
                   <label for="uname" class="form-label">Username</label>
                   <input type="text" class="form-control" id="uname" name="uname" required>
                 </div>
@@ -104,22 +119,12 @@ if (isset($_SESSION['user_id'])) {
                   <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
                 </div>
 
-                <!-- <div class="mb-2">
-                  <label for="profile_image" class="form-label">Profile Picture</label>
-                  <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
-                </div> -->
-
-                <!-- <div class="mb-1">
-                  <label for="seniorId" class="form-label">Your Senior ID Number</label>
-                  <input type="text" class="form-control" id="seniorId" name="seniorId" required>
-                </div> -->
-
                 <button type="submit" class="btn btn-primary w-100">Register</button>
               </form>
+
               <br>
               <div class="text-center">
                 <p class="text-center">Already have an account?<a href="login.php"> Login</a></p>
-                <!-- <a href="volunteer/volunteer_register.php" class="btn btn-primary link">Register as a volunteer</a> -->
               </div>
 
             </div>

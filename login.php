@@ -60,6 +60,8 @@ if (isset($_SESSION['user_id'])) {
       border-radius: 50px;
       color: white;
     }
+
+    
   </style>
 </head>
 
@@ -84,8 +86,8 @@ if (isset($_SESSION['user_id'])) {
 
               <form action="login_process.php" method="post">
                 <div class="mb-3">
-                  <label for="pnumber" class="form-label">Phone number</label>
-                  <input type="text" class="form-control" id="pnumber" name="phone" placeholder="Enter your phone number">
+                  <label for="pnumber" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="username" name="username" placeholder="Enter your Username">
                 </div>
 
                 <div class="mb-3">
@@ -107,21 +109,16 @@ if (isset($_SESSION['user_id'])) {
                 <p class="text-center mb-0">
                   Don't have an account?
                   <a href="index.php" class="text-primary">Register here</a>
+                  <br>or<br>
+                  <a href="volunteer/volunteer_register.php" class="text-primary">Register as a volunteer</a>
                 </p>
-                <div class="text-center mt-2">
-                  <a href="admin_page/admin_login.php" class="link btn btn-primary">Login as admin</a>
-                  <a href="volunteer/volunteer_login.php" class="btn btn-primary link">Login as volunteer</a>
-                </div>
-
               </form>
             </div>
-
           </div> <!-- row -->
         </div> <!-- card -->
       </div>
     </div>
   </div>
-
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       if (!window.localStorage.getItem("page_refreshed_once")) {

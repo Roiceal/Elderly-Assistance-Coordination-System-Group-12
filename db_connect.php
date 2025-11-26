@@ -1,6 +1,6 @@
 <?php
 $host = "localhost";
-$dbname = "otp";
+$dbname = "elderlyassistancecoordinationdb";
 $username = "root";
 $password = "";
 
