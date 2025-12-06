@@ -13,7 +13,6 @@ $stmt = $pdo->prepare("SELECT first_name, last_name, username, phone, profile_im
 $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $first_name = $_POST['first_name'] ?? '';
     $last_name = $_POST['last_name'] ?? '';
@@ -25,11 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $imageData = file_get_contents($_FILES['image']['tmp_name']);
     }
 
-    // Update user info
     $stmt = $pdo->prepare("UPDATE users SET first_name=?, last_name=?, username=?, phone=?, profile_image=? WHERE id=?");
     $stmt->execute([$first_name, $last_name, $username, $phone, $imageData, $user_id]);
 
-    // Redirect with success message
     header("Location: user_profile.php?success=Profile updated successfully");
     exit();
 }
@@ -43,135 +40,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>I-edit ang Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Add SweetAlert2 CDN in the <head> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f8f9fa;
-            margin: 0;
-        }
-
-        #sidebar {
-            width: 250px;
-            background: #1f4f3c;
-            color: #fff;
-            position: fixed;
-            height: 100vh;
-            padding-top: 20px;
-            transition: 0.3s;
-        }
-
-        #sidebar.collapsed {
-            width: 70px;
-        }
-
-        #sidebar .nav-link {
-            color: #fff;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        #sidebar .nav-link:hover {
-            background: rgba(255, 255, 255, 0.15);
-            padding-left: 25px;
-        }
-
-        #sidebar.collapsed .text {
-            display: none;
-        }
-
-        #content {
-            margin-left: 250px;
-            padding: 20px;
-            transition: margin-left 0.3s;
-        }
-
-        #content.expanded {
-            margin-left: 70px;
-        }
-
-        .profile-img {
-            width: 220px;
-            /* bigger width */
-            height: 220px;
-            /* bigger height */
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #c5e1dc;
-        }
-
-
-        @media (max-width: 768px) {
-
-            #sidebar,
-            #content {
-                margin-left: 0 !important;
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="edit_profile_elder.css">
 </head>
 
-<body>
+<body class="<?= $high_contrast ? 'high-contrast' : '' ?>" style="font-size: <?= $font_size ?>;">
 
-    <!-- Sidebar -->
-    <div id="sidebar" class="d-none d-md-block">
-        <button class="btn btn-sm btn-outline-light mb-3 ms-3" id="toggleSidebar"><i class="bi bi-list"></i></button>
+    <!-- MOBILE HAMBURGER -->
+    <button id="mobileMenuBtn" class="btn btn-light d-md-none"
+        style="z-index: 3000;margin-left: 10px; margin-top: 10px;;">
+        <i class="bi bi-list fs-3"></i>
+    </button>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+
+        <!-- Desktop collapse button -->
+        <button class="btn btn-sm btn-outline-light mb-3 ms-3 d-none d-md-block" id="toggleSidebar">
+            <i class="bi bi-list"></i>
+        </button>
+
         <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i><span class="text">Home</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
-            <li class="nav-item"><a href="events.php" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
-            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i> <span class="text">Home</span></a></li>
+            <li class="nav-item"><a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i> <span class="text">Profile</span></a></li>
+            <li class="nav-item"><a href="all_events.php" class="nav-link"><i class="bi bi-calendar-event"></i> <span class="text">Events</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i> <span class="text">Settings</span></a></li>
+            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> <span class="text">Logout</span></a></li>
         </ul>
     </div>
 
-    <!-- Content -->
-    <div id="content" class="container">
-        <div class="card p-4 shadow-sm">
-            <h3 class="mb-4">Edit Your Profile</h3>
-            <form method="POST" id="editProfileForm" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label class="form-label">First Name</label>
-                    <input type="text" name="first_name" class="form-control" value="<?= htmlspecialchars($user['first_name']) ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Last Name</label>
-                    <input type="text" name="last_name" class="form-control" value="<?= htmlspecialchars($user['last_name']) ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Phone</label>
-                    <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($user['phone']) ?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Profile Image</label>
-                    <input type="file" name="image" class="form-control" id="profileImageInput">
-                    <img src="data:image/jpeg;base64,<?= base64_encode($user['profile_image']) ?>"
-                        alt="Profile"
-                        class="img-thumbnail mt-2 profile-img"
-                        id="profileImagePreview">
+    <!-- OVERLAY -->
+    <div id="overlay"></div>
 
-                </div>
-                <button type="submit" class="btn btn-primary">I-save ang Profile</button>
-                <a href="user_profile.php" class="btn btn-secondary">Cancel</a>
-            </form>
+    <!-- Content -->
+    <div id="content">
+        <div class="container">
+            <div class="card p-4 shadow-sm mx-auto">
+                <h3 class="mb-4 text-center">Edit Your Profile</h3>
+                <form method="POST" id="editProfileForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="first_name" class="form-control" value="<?= htmlspecialchars($user['first_name']) ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-control" value="<?= htmlspecialchars($user['last_name']) ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($user['phone']) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Profile Image</label>
+                        <input type="file" name="image" class="form-control" id="profileImageInput">
+                        <img src="data:image/jpeg;base64,<?= base64_encode($user['profile_image']) ?>" alt="Profile" class="img-thumbnail mt-2 profile-img" id="profileImagePreview">
+                    </div>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button type="submit" class="btn btn-primary">I-save ang Profile</button>
+                        <a href="user_profile.php" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     <script>
-        // Preview selected image
         const profileInput = document.getElementById('profileImageInput');
         const profilePreview = document.getElementById('profileImagePreview');
-
         profileInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
@@ -183,16 +122,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
 
-        document.getElementById("toggleSidebar").addEventListener("click", () => {
-            const sidebar = document.getElementById("sidebar");
-            const content = document.getElementById("content");
-            sidebar.classList.toggle("collapsed");
-            content.classList.toggle("expanded");
+        // Mobile sidebar toggle
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+
+        mobileMenuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            overlay.classList.toggle("show");
+        });
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
         });
 
+        // SweetAlert confirm
         document.getElementById('editProfileForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // prevent form submission
-
+            e.preventDefault();
             Swal.fire({
                 title: 'Sigurado ka ba?',
                 text: "Gusto mo bang i-update ang iyong profile?",
@@ -204,12 +150,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 cancelButtonText: 'Hindi'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // If confirmed, submit the form
                     e.target.submit();
                 }
             });
         });
     </script>
+    <script src="cookie.js"></script>
 
 </body>
 

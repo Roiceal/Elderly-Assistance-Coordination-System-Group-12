@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
 
         case 'admin':
-            $stmt = $pdo->query("SELECT phone FROM admins WHERE phone IS NOT NULL");
+            $stmt = $pdo->query("SELECT phone FROM admin WHERE phone IS NOT NULL");
             break;
 
         case 'all':
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $stmt1 = $pdo->query("SELECT phone FROM users WHERE phone IS NOT NULL");
             $stmt2 = $pdo->query("SELECT phone FROM volunteers WHERE phone IS NOT NULL");
-            $stmt3 = $pdo->query("SELECT phone FROM admins WHERE phone IS NOT NULL");
+            $stmt3 = $pdo->query("SELECT phone FROM admin WHERE phone IS NOT NULL");
 
             $phones1 = $stmt1->fetchAll(PDO::FETCH_COLUMN);
             $phones2 = $stmt2->fetchAll(PDO::FETCH_COLUMN);

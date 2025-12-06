@@ -54,9 +54,21 @@ $stmt3->execute([$username]);
 $volunteers = $stmt3->fetch(PDO::FETCH_ASSOC);
 
 // Admin login
-if ($admin && $role === 'Admin' && $admin['password'] === $password) {
+if ($admin && $role === 'Admin' && password_verify($password, $admin['password'])) {
     $_SESSION['admin_id'] = $admin['id'];
     $_SESSION['admin_username'] = $admin['username'];
+
+    $admin_id = $_SESSION['admin_id'];
+    $activity = "Admin logged in";
+
+    $stmt = $pdo->prepare("INSERT INTO activity_logs (admin_id, activity, ip_address, user_agent) 
+                       VALUES (?, ?, ?, ?)");
+    $stmt->execute([
+        $admin_id,
+        $activity,
+        $_SERVER['REMOTE_ADDR'],
+        $_SERVER['HTTP_USER_AGENT']
+    ]);
 
     echo '<!DOCTYPE html>
 

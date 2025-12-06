@@ -1,0 +1,198 @@
+body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            overflow-x: hidden;
+            transition: all 0.2s ease-in-out;
+        }
+
+        body.high-contrast {
+            background: black;
+            color: white;
+        }
+
+        body.high-contrast a {
+            color: yellow;
+        }
+
+        body.high-contrast .card {
+            background: #333;
+            color: white;
+        }
+
+        body.high-contrast .btn {
+            background-color: #555;
+            color: white;
+        }
+
+
+        /* SIDEBAR */
+        #sidebar {
+            width: 250px;
+            background: #1f4f3c;
+            color: #fff;
+            transition: 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            padding-top: 20px;
+            z-index: 5000;
+            /* FIX: should be above header */
+            left: 0;
+        }
+
+        #sidebar.collapsed {
+            width: 70px;
+        }
+
+        #sidebar .nav-link {
+            color: #fff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        #sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            padding-left: 25px;
+        }
+
+        #sidebar.collapsed .text {
+            display: none;
+        }
+
+        /* CONTENT */
+        #content {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+        }
+
+        #content.expanded {
+            margin-left: 70px;
+        }
+
+        /* MOBILE SIDEBAR FIX */
+        @media (max-width: 992px) {
+
+            #sidebar {
+                width: 260px !important;
+                position: fixed;
+                /* REQUIRED */
+                top: 0;
+                /* REQUIRED */
+                left: 0;
+                transform: translateX(-260px);
+                height: 100vh;
+                /* Ensures full screen sidebar */
+                backdrop-filter: blur(12px);
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+                z-index: 5000;
+            }
+
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #sidebar .text {
+                display: inline !important;
+            }
+
+            #overlay {
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(3px);
+                top: 0;
+                left: 0;
+                z-index: 4000;
+            }
+
+            #overlay.show {
+                display: block;
+            }
+
+            #content {
+                margin-left: 0 !important;
+            }
+        }
+
+        /* CONTENT */
+        #content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        #content.expanded {
+            margin-left: 70px;
+        }
+
+        /* CARD / FORM */
+        .card.mx-auto {
+            max-width: 700px;
+        }
+
+        .profile-img {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #c5e1dc;
+        }
+
+        /* BUTTONS */
+        .btn {
+            background-color: #2a7f62;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #2a7f62;
+        }
+
+        .btn-primary:hover {
+            background-color: #1f4f3c;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #495057;
+        }
+
+        #mobileMenuBtn {
+            border: solid 2px #2a7f62;
+            background-color: white;
+            color: black;
+        }
+
+        #mobileMenuBtn:hover {
+            border: solid 2px #2a7f62;
+            background-color: #2a7f62;
+            color: white;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-260px);
+                width: 250px;
+                top: 0;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #content {
+                margin-left: 0 !important;
+                padding: 15px;
+            }
+        }

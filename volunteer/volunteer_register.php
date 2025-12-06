@@ -156,9 +156,15 @@
                 </div>
 
                 <!-- PASSWORD -->
-                <div class="mb-2">
+                <div class="mb-2 position-relative">
                   <input type="password" class="form-control" id="password" name="password" placeholder="Your Password" required>
+                  <span class="toggle-password"
+                    onclick="togglePassword()"
+                    style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                    <i class="bi bi-eye-fill" id="eyeIcon"></i>
+                  </span>
                 </div>
+
                 <div id="formWarning" class="form-warning"></div>
                 <br>
                 <!-- PASSWORD CRITERIA -->
@@ -170,7 +176,7 @@
                 </div>
 
                 <!-- General form warning -->
-                
+
 
                 <button type="submit" class="btn btn-primary w-100">Register</button>
 
@@ -189,15 +195,31 @@
 
   <!-- VALIDATION SCRIPT -->
   <script>
-    $(document).ready(function () {
+    function togglePassword() {
+      let passwordField = document.getElementById("password");
+      let eyeIcon = document.getElementById("eyeIcon");
+
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.classList.remove("bi-eye-fill");
+        eyeIcon.classList.add("bi-eye-slash-fill");
+      } else {
+        passwordField.type = "password";
+        eyeIcon.classList.remove("bi-eye-slash-fill");
+        eyeIcon.classList.add("bi-eye-fill");
+      }
+    }
+
+
+    $(document).ready(function() {
 
       // Apply filled class on selects
-      $('select').on('change', function () {
+      $('select').on('change', function() {
         $(this).toggleClass('filled', $(this).val() !== '');
       });
 
       // Password criteria real-time check
-      $("#password").on("keyup", function () {
+      $("#password").on("keyup", function() {
         let pass = $(this).val();
 
         function setCriteria(selector, condition, text) {
@@ -205,9 +227,9 @@
             .toggleClass("valid", condition)
             .toggleClass("invalid", !condition)
             .html(
-              (condition
-                ? '<i class="bi bi-check-circle-fill"></i> '
-                : '<i class="bi bi-x-circle-fill"></i> '
+              (condition ?
+                '<i class="bi bi-check-circle-fill"></i> ' :
+                '<i class="bi bi-x-circle-fill"></i> '
               ) + text
             );
         }
@@ -219,7 +241,7 @@
       });
 
       // Form submit validation without alert
-      $("form").on("submit", function (e) {
+      $("form").on("submit", function(e) {
         let valid = true;
         let pass = $("#password").val();
         let strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -228,7 +250,7 @@
         $("#formWarning").text("");
 
         // Required field checking
-        $("input[required], select[required]").each(function () {
+        $("input[required], select[required]").each(function() {
           if ($(this).val().trim() === "") {
             valid = false;
             $("#formWarning").text("Please fill out all required fields.");
@@ -251,4 +273,5 @@
   </script>
 
 </body>
+
 </html>

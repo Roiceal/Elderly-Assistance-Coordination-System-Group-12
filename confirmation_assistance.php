@@ -26,8 +26,8 @@ if (!$request) {
 }
 
 $statusColors = [
-    'pending' => 'bg-warning',
-    'in_progress' => 'bg-info',
+    'pending' => 'bg-warning text-dark',
+    'in_progress' => 'bg-info text-dark',
     'for_elders_approval' => 'bg-secondary',
     'completed' => 'bg-success'
 ];
@@ -55,16 +55,16 @@ $badgeClass = $statusColors[$request['status']] ?? 'bg-dark';
             overflow-x: hidden;
         }
 
-        /* Sidebar */
+        /* ------------------ DESKTOP SIDEBAR ------------------ */
         #sidebar {
             width: 250px;
             background: #1f4f3c;
             color: #fff;
-            transition: 0.3s;
+            transition: 0.3s ease;
             position: fixed;
             height: 100vh;
             padding-top: 20px;
-            z-index: 10;
+            z-index: 2000;
         }
 
         #sidebar.collapsed {
@@ -79,6 +79,7 @@ $badgeClass = $statusColors[$request['status']] ?? 'bg-dark';
             gap: 15px;
             border-radius: 8px;
             transition: all 0.2s;
+            font-size: 1rem;
         }
 
         #sidebar .nav-link:hover {
@@ -90,42 +91,102 @@ $badgeClass = $statusColors[$request['status']] ?? 'bg-dark';
             display: none;
         }
 
-        /* Page content shifts right */
-        .content {
-            margin-left: 270px;
-            padding: 30px;
+        /* ------------------ DESKTOP CONTENT ------------------ */
+        #content {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
         }
 
-        #sidebar.collapsed ~ .content {
-            margin-left: 100px;
+        #content.expanded {
+            margin-left: 70px;
+        }
+
+        /* ---------------- MOBILE SIDEBAR (GLASS STYLE) ---------------- */
+        @media (max-width: 992px) {
+
+            #sidebar {
+                width: 260px !important;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                transform: translateX(-260px);
+                background: rgba(31, 79, 60, 0.90);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+                transition: 0.4s ease;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            /* Always show text on mobile (no collapse) */
+            #sidebar .text {
+                display: inline !important;
+            }
+
+            /* Overlay */
+            #overlay {
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(3px);
+                top: 0;
+                left: 0;
+                z-index: 1500;
+            }
+
+            #overlay.show {
+                display: block;
+            }
+
+            #content {
+                margin-left: 0 !important;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Sidebar -->
-    <div id="sidebar" class="d-none d-md-block">
-        <button class="btn btn-sm btn-outline-light ms-3" id="toggleSidebar">
+    <!-- MOBILE HAMBURGER -->
+    <button id="mobileMenuBtn" class="btn btn-light d-md-none"
+        style="z-index: 3000;margin-left: 10px; margin-top: 10px;;">
+        <i class="bi bi-list fs-3"></i>
+    </button>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+
+        <!-- Desktop collapse button -->
+        <button class="btn btn-sm btn-outline-light mb-3 ms-3 d-none d-md-block" id="toggleSidebar">
             <i class="bi bi-list"></i>
         </button>
+
         <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i><span class="text">Home</span></a></li>
-            <li class="nav-item"><a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
-            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i> <span class="text">Home</span></a></li>
+            <li class="nav-item"><a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i> <span class="text">Profile</span></a></li>
+            <li class="nav-item"><a href="all_events.php" class="nav-link"><i class="bi bi-calendar-event"></i> <span class="text">Events</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i> <span class="text">Settings</span></a></li>
+            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> <span class="text">Logout</span></a></li>
         </ul>
     </div>
 
-    <!-- Page Content -->
-    <div class="content">
+    <!-- OVERLAY -->
+    <div id="overlay"></div>
 
-        <div class="share_location p-4 bg-white rounded shadow-sm">
+    <!-- CONTENT -->
+    <div id="content">
+
+        <div class="p-4 bg-white rounded shadow-sm">
             <h4 class="mb-3 fw-bold">Assistance Confirmation</h4>
 
             <p><strong>Type of Assistance:</strong> <?= htmlspecialchars($request['request_type']) ?></p>
-
             <p><strong>Description:</strong> <?= htmlspecialchars($request['description']) ?></p>
 
             <p><strong>Assigned Volunteer:</strong>
@@ -137,14 +198,15 @@ $badgeClass = $statusColors[$request['status']] ?? 'bg-dark';
             </p>
 
             <p><strong>Status:</strong>
-                <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($request['status']) ?></span>
+                <span class="badge <?= $badgeClass ?>">
+                    <?= htmlspecialchars(ucwords(str_replace("_", " ", $request['status']))) ?>
+                </span>
             </p>
 
-            <!-- Approve Button -->
-            <?php if ($request['status'] == 'for_elders_approval'): ?>
-                <form action="update_status_approve.php" id="approveForm" method="post">
+            <?php if ($request['status'] === 'for_elders_approval'): ?>
+                <form action="update_status_approve.php" method="post" id="approveForm">
                     <input type="hidden" name="request_id" value="<?= $request['id'] ?>">
-                    <button type="submit" class="btn btn-success btn-sm mt-2">
+                    <button class="btn btn-success btn-sm mt-2">
                         <i class="bi bi-check-circle"></i> Approve Assistance Completion
                     </button>
                 </form>
@@ -157,12 +219,22 @@ $badgeClass = $statusColors[$request['status']] ?? 'bg-dark';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Sidebar toggle
-        document.getElementById("toggleSidebar").addEventListener("click", function() {
-            document.getElementById("sidebar").classList.toggle("collapsed");
+         // Mobile menu
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+
+        mobileMenuBtn.addEventListener("click", () => {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
         });
 
-        // SweetAlert Confirmation
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+        });
+
+        /* ========== SWEETALERT CONFIRMATION ========== */
         const approveForm = document.getElementById("approveForm");
 
         if (approveForm) {
@@ -171,7 +243,7 @@ $badgeClass = $statusColors[$request['status']] ?? 'bg-dark';
 
                 Swal.fire({
                     title: "Approve this assistance?",
-                    text: "This action will mark the request as completed.",
+                    text: "This will mark the request as completed.",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#2a7f62",

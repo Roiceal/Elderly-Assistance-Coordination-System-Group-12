@@ -1,57 +1,56 @@
 <?php
-// include 'db_connect.php';
-
-// $response = [];
-
-// try {
-//     // $sql = "DELETE FROM attendance_records";
-//     $sql = "INSERT INTO attendance_backup SELECT * FROM attendance_records";
-//     if ($conn->query($sql) === TRUE) {
-//         $response['success'] = true;
-//     } else {
-//         $response['success'] = false;
-//         $response['message'] = "Error: " . $conn->error;
-//     }
-
-//     $sql = "DELETE FROM attendance_records";
-//     $conn->query($sql);
-// } catch (Exception $e) {
-//     $response['success'] = false;
-//     $response['message'] = $e->getMessage();
-// }
-
-// echo json_encode($response);
-// $conn->close();
-
-
 include 'db_connect.php';
 date_default_timezone_set('Asia/Manila');
 
-while (true) {
-    $currentHour = date('H');
-    $currentMinute = date('i');
+// Run backup only once per day
+$today = date('Y-m-d');
+$last_backup_file = 'last_backup.txt';
 
-    if ($currentHour == '00' && $currentMinute == '00') {
-        try {
-            $backupTable = "attendance_backup_" . date('Y_m_d');
-            $conn->query("CREATE TABLE IF NOT EXISTS `$backupTable` LIKE `attendance_records`");
-            $conn->query("INSERT INTO `$backupTable` SELECT * FROM `attendance_records`");
-            $conn->query("DELETE FROM `attendance_records`");
-            echo "Backup completed at " . date('Y-m-d H:i:s') . PHP_EOL;
+// Check last backup date
+$last_backup = file_exists($last_backup_file) ? trim(file_get_contents($last_backup_file)) : '';
 
-            // Wait one minute to prevent duplicate execution
-            sleep(60);
+if ($last_backup !== $today) {
+    $backupTable = "attendance_backup_" . date('Y_m_d');
 
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage() . PHP_EOL;
+    try {
+        // Create backup table if not exists
+        $createTableSql = "CREATE TABLE IF NOT EXISTS `$backupTable` LIKE `attendance_records`";
+        if (!$conn->query($createTableSql)) {
+            throw new Exception("Failed to create backup table: " . $conn->error);
         }
-    }
 
-    // Sleep 10 seconds before checking again
-    sleep(10);
+        // Copy attendance records to backup table
+        $insertSql = "INSERT INTO `$backupTable` SELECT * FROM `attendance_records`";
+        if (!$conn->query($insertSql)) {
+            throw new Exception("Failed to insert records into backup table: " . $conn->error);
+        }
+
+        // Clear original attendance_records table
+        $deleteSql = "DELETE FROM `attendance_records`";
+        if (!$conn->query($deleteSql)) {
+            throw new Exception("Failed to clear attendance records: " . $conn->error);
+        }
+
+        // Update last backup date
+        file_put_contents($last_backup_file, $today);
+
+        echo json_encode([
+            "success" => true,
+            "message" => "Attendance records backed up successfully to `$backupTable`."
+        ]);
+
+    } catch (Exception $e) {
+        // echo json_encode([
+        //     "success" => false,
+        //     "message" => $e->getMessage()
+        // ]);
+    }
+} else {
+    // echo json_encode([
+    //     "success" => false,
+    //     "message" => "Backup already performed today."
+    // ]);
 }
 
-
-
-
+$conn->close();
 ?>

@@ -110,7 +110,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="col-md-6">
               <h2 class="text-center mb-4">Register your account</h2>
 
-              <form id="registerForm" action="insert_user.php" enctype="multipart/form-data" method="post">
+              <form id="registerForm" action="otp/send_otp.php" enctype="multipart/form-data" method="post">
 
                 <div class="mb-3">
                   <input type="text" class="form-control" name="fname" placeholder="First name" required>
@@ -118,6 +118,10 @@ if (isset($_SESSION['user_id'])) {
 
                 <div class="mb-3">
                   <input type="text" class="form-control" name="lname" placeholder="Last name" required>
+                </div>
+
+                <div class="mb-3">
+                  <input type="text" class="form-control" name="address" placeholder="address" required>
                 </div>
 
                 <div class="mb-3">
@@ -153,8 +157,13 @@ if (isset($_SESSION['user_id'])) {
                 </div>
 
                 <!-- Password -->
-                <div class="mb-3">
+                <div class="mb-3 position-relative">
                   <input type="password" id="password" class="form-control" name="password" placeholder="Your Password" required>
+                  <span class="toggle-password"
+                    onclick="togglePassword()"
+                    style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                    <i class="bi bi-eye-fill" id="eyeIcon"></i>
+                  </span>
                 </div>
 
                 <!-- Inline Form Warning -->
@@ -169,7 +178,7 @@ if (isset($_SESSION['user_id'])) {
                   <p id="special" class="invalid"><i class="bi bi-x-circle-fill"></i> At least 1 special character</p>
                 </div>
 
-                
+
 
                 <button type="submit" class="btn btn-primary w-100">Register</button>
               </form>
@@ -188,10 +197,25 @@ if (isset($_SESSION['user_id'])) {
   </div>
 
   <script>
-    $(document).ready(function () {
+    function togglePassword() {
+      let passwordField = document.getElementById("password");
+      let eyeIcon = document.getElementById("eyeIcon");
+
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.classList.remove("bi-eye-fill");
+        eyeIcon.classList.add("bi-eye-slash-fill");
+      } else {
+        passwordField.type = "password";
+        eyeIcon.classList.remove("bi-eye-slash-fill");
+        eyeIcon.classList.add("bi-eye-fill");
+      }
+    }
+
+    $(document).ready(function() {
 
       // Password criteria real-time check
-      $("#password").on("keyup", function () {
+      $("#password").on("keyup", function() {
         let pass = $(this).val();
 
         function setCriteria(selector, condition, text) {
@@ -199,9 +223,9 @@ if (isset($_SESSION['user_id'])) {
             .toggleClass("valid", condition)
             .toggleClass("invalid", !condition)
             .html(
-              (condition
-                ? '<i class="bi bi-check-circle-fill"></i> '
-                : '<i class="bi bi-x-circle-fill"></i> '
+              (condition ?
+                '<i class="bi bi-check-circle-fill"></i> ' :
+                '<i class="bi bi-x-circle-fill"></i> '
               ) + text
             );
         }
@@ -213,7 +237,7 @@ if (isset($_SESSION['user_id'])) {
       });
 
       // Form submission validation with inline warnings
-      $("#registerForm").on("submit", function (e) {
+      $("#registerForm").on("submit", function(e) {
         let pass = $("#password").val();
         let strongPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
         let valid = true;
@@ -222,7 +246,7 @@ if (isset($_SESSION['user_id'])) {
         $("#formWarning").text("");
 
         // Check required fields
-        $("#registerForm [required]").each(function () {
+        $("#registerForm [required]").each(function() {
           if ($(this).val().trim() === "") {
             valid = false;
             $("#formWarning").text("Please fill out all required fields.");

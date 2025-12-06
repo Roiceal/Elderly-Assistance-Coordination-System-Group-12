@@ -41,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -53,17 +52,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: #f0f2f5;
+            background: #f8f9fa;
+            overflow-x: hidden;
         }
 
+        /* SIDEBAR */
         #sidebar {
             width: 250px;
-            position: fixed;
-            height: 100vh;
             background: #1f4f3c;
             color: #fff;
+            position: fixed;
+            height: 100vh;
             padding-top: 20px;
             transition: 0.3s;
+            z-index: 2000;
         }
 
         #sidebar.collapsed {
@@ -75,13 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 12px 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-radius: 6px;
-            transition: 0.2s;
+            gap: 15px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 1rem;
         }
 
         #sidebar .nav-link:hover {
-            background: #495057;
+            background: rgba(255, 255, 255, 0.15);
             padding-left: 25px;
         }
 
@@ -89,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: none;
         }
 
+        /* CONTENT */
         #content {
             margin-left: 250px;
             transition: 0.3s;
@@ -99,6 +103,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-left: 70px;
         }
 
+        /* MOBILE */
+        @media(max-width:992px) {
+            #sidebar {
+                transform: translateX(-260px);
+                width: 260px;
+                background: rgba(31, 79, 60, 0.95);
+                backdrop-filter: blur(12px);
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                transition: 0.4s;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #sidebar .text {
+                display: inline !important;
+            }
+
+            #overlay {
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.45);
+                top: 0;
+                left: 0;
+                z-index: 1500;
+            }
+
+            #overlay.show {
+                display: block;
+            }
+
+            #content {
+                margin-left: 0 !important;
+            }
+
+            #mobileMenuBtn {
+                border: 2px solid #2a7f62;
+                background-color: white;
+                color: black;
+                margin-left: 10px;
+                margin-top: 10px;
+            }
+
+            #mobileMenuBtn:hover {
+                background-color: #2a7f62;
+                color: white;
+                margin-left: 10px;
+                margin-top: 10px;
+            }
+        }
+
+        @media(min-width:993px) {
+            #mobileMenuBtn {
+                display: none !important;
+            }
+        }
+
+        /* PROFILE CARD */
         .profile-card {
             max-width: 700px;
             margin: 50px auto;
@@ -125,41 +193,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-primary:hover {
             background: #1f4f3c;
         }
-
-        @media(max-width:768px) {
-
-            #sidebar,
-            #content {
-                margin-left: 0;
-                width: 100% !important;
-            }
-        }
     </style>
-
 </head>
 
 <body>
 
-    <!-- Sidebar -->
+    <!-- MOBILE HAMBURGER -->
+    <button id="mobileMenuBtn" class="btn btn-light d-md-none"><i class="bi bi-list fs-3"></i></button>
 
+    <!-- SIDEBAR -->
     <div id="sidebar">
-        <button class="btn btn-sm btn-outline-light mb-3 ms-3" id="toggleSidebar"><i class="bi bi-list"></i></button>
+        <button class="btn btn-sm btn-outline-light mb-3 ms-3 d-none d-md-block" id="toggleSidebar"><i class="bi bi-list"></i></button>
         <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a href="volunteer_dashboard.php" class="nav-link"><i class="bi bi-house"></i><span class="text">Dashboard</span></a></li>
-            <li class="nav-item"><a href="volunteer_profile.php" class="nav-link active"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
-            <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+            <li class="nav-item"><a href="volunteer_dashboard.php" class="nav-link"><i class="bi bi-house"></i> <span class="text">Home</span></a></li>
+            <li class="nav-item"><a href="volunteer_profile.php" class="nav-link"><i class="bi bi-person"></i> <span class="text">Profile</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i> <span class="text">Settings</span></a></li>
+            <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> <span class="text">Logout</span></a></li>
         </ul>
     </div>
 
-    <!-- Main Content -->
+    <div id="overlay"></div>
 
+    <!-- MAIN CONTENT -->
     <div id="content">
-        <h2 class="mb-3"></h2>
         <div class="profile-card text-center">
             <?php if ($volunteer['profile_image']): ?>
-                <img src="data:image/jpeg;base64,<?= base64_encode($volunteer['profile_image']) ?>" alt="Profile Image" class="profile-image">
+                <img src="data:image/jpeg;base64,<?= base64_encode($volunteer['profile_image']) ?>" class="profile-image" alt="Profile Image">
             <?php else: ?>
-                <img src="https://via.placeholder.com/150" alt="Profile Image" class="profile-image">
+                <img src="https://via.placeholder.com/150" class="profile-image" alt="Profile Image">
             <?php endif; ?>
 
             <form method="post" enctype="multipart/form-data" class="mt-3 text-start">
@@ -185,19 +246,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-primary w-100">Update Profile</button>
             </form>
         </div>
-        ```
-
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
+        // Desktop toggle
         document.getElementById('toggleSidebar').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('collapsed');
             document.getElementById('content').classList.toggle('expanded');
         });
-    </script>
 
+        // Mobile sidebar open
+        $('#mobileMenuBtn').click(function() {
+            $('#sidebar').addClass('open');
+            $('#overlay').addClass('show');
+        });
+
+        // Mobile sidebar close
+        $('#overlay').click(function() {
+            $('#sidebar').removeClass('open');
+            $(this).removeClass('show');
+        });
+    </script>
 </body>
 
 </html>

@@ -23,6 +23,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
@@ -106,8 +109,14 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
                   <input type="text" class="form-control" id="username" name="username" placeholder="Enter your Username">
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3 position-relative">
                   <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+
+                  <span class="toggle-password"
+                    onclick="togglePassword()"
+                    style="position:absolute; right:15px; top:50%; transform:translateY(-50%); cursor:pointer;">
+                    <i class="bi bi-eye-fill" id="eyeIcon"></i>
+                  </span>
                 </div>
 
                 <div class="mb-2">
@@ -124,7 +133,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
                     <input type="checkbox" class="form-check-input" name="remember" id="rememberMe">
                     <label class="form-check-label" for="rememberMe">Remember me</label>
                   </div>
-                  <a href="#" onclick="forgotPassword()">Forgot password?</a>
+                  <a href="./reset_password/forgot_password.php">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 mb-3 ">Login</button>
@@ -144,42 +153,19 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
     </div>
   </div>
   <script>
-    function forgotPassword() {
-      Swal.fire({
-        title: "Reset Password",
-        input: "text",
-        inputLabel: "Enter your username or phone number",
-        inputPlaceholder: "username or phone...",
-        showCancelButton: true,
-        confirmButtonText: "Submit",
-        cancelButtonText: "Cancel",
-        preConfirm: (value) => {
-          if (!value) {
-            Swal.showValidationMessage("Please enter something");
-          }
-          return value;
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Send value to backend
-          fetch("forgot_password_process.php", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
-              body: "identifier=" + encodeURIComponent(result.value)
-            })
-            .then(res => res.json())
-            .then(data => {
+    function togglePassword() {
+      let passwordField = document.getElementById("password");
+      let eyeIcon = document.getElementById("eyeIcon");
 
-              Swal.fire({
-                icon: data.status,
-                title: data.title,
-                text: data.message
-              });
-            });
-        }
-      });
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.classList.remove("bi-eye-fill");
+        eyeIcon.classList.add("bi-eye-slash-fill");
+      } else {
+        passwordField.type = "password";
+        eyeIcon.classList.remove("bi-eye-slash-fill");
+        eyeIcon.classList.add("bi-eye-fill");
+      }
     }
 
 

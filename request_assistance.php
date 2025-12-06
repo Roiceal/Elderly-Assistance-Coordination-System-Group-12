@@ -14,20 +14,22 @@ session_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        body {
+         body {
             font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
+            overflow-x: hidden;
         }
 
-        /* Sidebar */
+        /* ------------------ DESKTOP SIDEBAR ------------------ */
         #sidebar {
             width: 250px;
-            background: #1f4f3c ;
+            background: #1f4f3c;
             color: #fff;
-            transition: 0.3s;
+            transition: 0.3s ease;
             position: fixed;
             height: 100vh;
             padding-top: 20px;
+            z-index: 2000;
         }
 
         #sidebar.collapsed {
@@ -42,6 +44,7 @@ session_start();
             gap: 15px;
             border-radius: 8px;
             transition: all 0.2s;
+            font-size: 1rem;
         }
 
         #sidebar .nav-link:hover {
@@ -52,6 +55,71 @@ session_start();
         #sidebar.collapsed .text {
             display: none;
         }
+
+        /* ------------------ DESKTOP CONTENT ------------------ */
+        #content {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+        }
+
+        #content.expanded {
+            margin-left: 70px;
+        }
+
+        /* ---------------- MOBILE SIDEBAR (GLASS STYLE) ---------------- */
+        @media (max-width: 992px) {
+
+            #sidebar {
+                width: 260px !important;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                transform: translateX(-260px);
+                background: rgba(31, 79, 60, 0.90);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+                transition: 0.4s ease;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            /* Always show text on mobile (no collapse) */
+            #sidebar .text {
+                display: inline !important;
+            }
+
+            /* Overlay */
+            #overlay {
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(3px);
+                top: 0;
+                left: 0;
+                z-index: 1500;
+            }
+
+            #overlay.show {
+                display: block;
+            }
+
+            #content {
+                margin-left: 0 !important;
+            }
+
+          
+        }
+
+       
+
+        /* END NAVIGATION */
 
         /* Content */
         #content {
@@ -79,7 +147,7 @@ session_start();
         }
 
         .form-card h2 {
-            color: #1f4f3c ;
+            color: #1f4f3c;
             font-weight: bold;
         }
 
@@ -95,29 +163,57 @@ session_start();
                 width: 100%;
             }
         }
+
+        /* burger button */
+        #mobileMenuBtn {
+            border: solid 2px #2a7f62;
+            background-color: white;
+            color: black;
+        }
+
+        #mobileMenuBtn:hover {
+            border: solid 2px #2a7f62;
+            background-color: #2a7f62;
+            color: white;
+        }
+
+        /* burger button */
     </style>
 </head>
 
-<body>
+<body class="<?= $high_contrast ? 'high-contrast' : '' ?>" style="font-size: <?= $font_size ?>;">
 
 
-    <!-- Sidebar -->
-    <div id="sidebar" class="d-none d-md-block">
-        <button class="btn btn-sm btn-outline-light mb-3 ms-3" id="toggleSidebar">
+    <!-- MOBILE HAMBURGER -->
+        <button id="mobileMenuBtn" class="btn btn-light d-md-none"
+            style="z-index: 3000;margin-left: 10px; margin-top: 10px;;">
+            <i class="bi bi-list fs-3"></i>
+        </button>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+
+        <!-- Desktop collapse button -->
+        <button class="btn btn-sm btn-outline-light mb-3 ms-3 d-none d-md-block" id="toggleSidebar">
             <i class="bi bi-list"></i>
         </button>
+
         <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i><span class="text">Home</span></a></li>
-            <li class="nav-item"><a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
-            <li class="nav-item"><a href="events.php" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
-            <li class="nav-item"><a href="settings.php" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
-            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i> <span class="text">Home</span></a></li>
+            <li class="nav-item"><a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i> <span class="text">Profile</span></a></li>
+            <li class="nav-item"><a href="all_events.php" class="nav-link"><i class="bi bi-calendar-event"></i> <span class="text">Events</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i> <span class="text">Settings</span></a></li>
+            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> <span class="text">Logout</span></a></li>
         </ul>
     </div>
 
+    <!-- OVERLAY -->
+    <div id="overlay"></div>
+
+
     <!-- Main Content -->
     <div id="content">
-        <div class="form-card mt-5">
+        <div class="form-card mt-2">
             <h2 class="mb-3"><i class="bi bi-bell text-success"></i> Request Assistance</h2>
             <p class="text-muted mb-4">Submit your request and our caregivers will respond promptly.</p>
 
@@ -171,6 +267,21 @@ session_start();
             content.classList.toggle("expanded");
         });
 
+        // Mobile menu
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+
+        mobileMenuBtn.addEventListener("click", () => {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+        });
+
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+        });
+
         // Auto-dismiss success alert after 5 seconds
         const successAlert = document.getElementById("successAlert");
         if (successAlert) {
@@ -190,6 +301,7 @@ session_start();
             }
         });
     </script>
+    <script src="cookie.js"></script>
 
 </body>
 

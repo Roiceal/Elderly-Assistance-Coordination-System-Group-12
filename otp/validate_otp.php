@@ -145,18 +145,21 @@ if (!$row) {
             $fname   = $data['fname'];
             $lname   = $data['lname'];
             $phone   = $data['phone'];
+            $address   = $data['address'];
             $age     = $data['age'];
             $gender  = $data['gender'];
             $uname   = $data['uname'];
             $hashedPassword = $data['password']; // Already hashed earlier
             $imageData = $data['profile_image'] ?? null; // binary data or null
 
+            
+
             // Prepare the INSERT query using your preferred style
             $stmt = $pdo->prepare("
         INSERT INTO users 
-            (first_name, last_name, phone, age, gender, username, password, profile_image)
+            (first_name, last_name, address, phone, age, gender, username, password, profile_image)
         VALUES 
-            (:fname, :lname, :phone, :age, :gender, :uname, :password, :profile_image)
+            (:fname, :lname, :address, :phone, :age, :gender, :uname, :password, :profile_image)
     ");
 
             // Bind parameters EXACTLY how you wanted
@@ -164,6 +167,7 @@ if (!$row) {
             $stmt->bindParam(':lname', $lname);
             $stmt->bindParam(':phone', $phone);
             $stmt->bindParam(':age', $age);
+            $stmt->bindParam(':address', $address);
             $stmt->bindParam(':gender', $gender);
             $stmt->bindParam(':uname', $uname);
             $stmt->bindParam(':password', $hashedPassword);

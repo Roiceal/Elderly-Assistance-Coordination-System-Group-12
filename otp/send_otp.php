@@ -16,6 +16,7 @@ $_SESSION['reg_data'] = [
     'fname' => $_POST['fname'] ?? '',
     'lname' => $_POST['lname'] ?? '',
     'phone' => $_POST['phone'] ?? '',
+    'address' => $_POST['address'] ?? '',
     'age' => $_POST['age'] ?? '',
     'gender' => $_POST['gender'] ?? '',
     'uname' => $_POST['uname'] ?? '',

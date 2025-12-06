@@ -36,11 +36,20 @@ $stmt->execute([$volunteer_id]);
 $completed = $stmt->fetch(PDO::FETCH_ASSOC)['completed'] ?? 0;
 
 // Fetch assigned assistance requests
+// $stmt = $pdo->prepare("
+//     SELECT ar.id, u.first_name, u.last_name, ar.request_type, ar.description, ar.location, ar.status, ar.requested_at
+//     FROM assistance_requests ar
+//     JOIN users u ON ar.user_id = u.id
+//     WHERE ar.assigned_volunteer_id = ?
+//     ORDER BY ar.requested_at DESC
+// ");
+
 $stmt = $pdo->prepare("
     SELECT ar.id, u.first_name, u.last_name, ar.request_type, ar.description, ar.location, ar.status, ar.requested_at
     FROM assistance_requests ar
     JOIN users u ON ar.user_id = u.id
     WHERE ar.assigned_volunteer_id = ?
+      AND ar.status != 'completed'
     ORDER BY ar.requested_at DESC
 ");
 $stmt->execute([$volunteer_id]);
@@ -66,38 +75,20 @@ $assignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: #f0f2f5;
+            background: #f8f9fa;
+            overflow-x: hidden;
         }
 
-        .card {
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-card {
-            background: #fff;
-            border-radius: 14px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-icon {
-            font-size: 45px;
-            margin-bottom: 10px;
-            display: inline-block;
-            border-radius: 50%;
-            padding: 15px;
-        }
-
+        /* ------------------ DESKTOP SIDEBAR ------------------ */
         #sidebar {
             width: 250px;
-            position: fixed;
-            height: 100vh;
             background: #1f4f3c;
             color: #fff;
+            transition: 0.3s ease;
+            position: fixed;
+            height: 100vh;
             padding-top: 20px;
-            transition: 0.3s;
+            z-index: 2000;
         }
 
         #sidebar.collapsed {
@@ -109,13 +100,14 @@ $assignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 12px 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-radius: 6px;
-            transition: 0.2s;
+            gap: 15px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 1rem;
         }
 
         #sidebar .nav-link:hover {
-            background: #c5e1dc;
+            background: rgba(255, 255, 255, 0.15);
             padding-left: 25px;
         }
 
@@ -123,9 +115,10 @@ $assignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
             display: none;
         }
 
+        /* ------------------ DESKTOP CONTENT ------------------ */
         #content {
             margin-left: 250px;
-            transition: 0.3s;
+            transition: margin-left 0.3s ease;
             padding: 20px;
         }
 
@@ -133,37 +126,183 @@ $assignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin-left: 70px;
         }
 
-        @media(max-width:768px) {
-            #sidebar,
+        /* ---------------- MOBILE SIDEBAR (GLASS STYLE) ---------------- */
+        @media (max-width: 992px) {
+
+            #sidebar {
+                width: 260px !important;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                transform: translateX(-260px);
+                background: rgba(31, 79, 60, 0.90);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+                transition: 0.4s ease;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            /* Always show text on mobile (no collapse) */
+            #sidebar .text {
+                display: inline !important;
+            }
+
+            /* Overlay */
+            #overlay {
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(3px);
+                top: 0;
+                left: 0;
+                z-index: 1500;
+            }
+
+            #overlay.show {
+                display: block;
+            }
+
             #content {
-                margin-left: 0;
-                width: 100% !important;
+                margin-left: 0 !important;
+            }
+        }
+
+        /* end navigation */
+
+
+
+
+
+
+        /* STAT CARD */
+        .stat-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .stat-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+            display: inline-block;
+            border-radius: 50%;
+            padding: 15px;
+            color: #1f4f3c;
+            /* consistent color */
+        }
+
+        /* STAT CARD  end*/
+
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            /* smooth scrolling on mobile */
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* MOBILE */
+        @media(max-width: 992px) {
+            #sidebar {
+                transform: translateX(-260px);
+                width: 260px;
+                background: rgba(31, 79, 60, 0.95);
+                backdrop-filter: blur(12px);
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #sidebar .text {
+                display: inline !important;
+            }
+
+            #content {
+                margin-left: 0 !important;
+            }
+
+            /* burger button */
+            #mobileMenuBtn {
+                border: solid 2px #2a7f62;
+                background-color: white;
+                color: black;
+                margin-left: 10px;
+                margin-top: 10px;
+            }
+
+            #mobileMenuBtn:hover {
+                border: solid 2px #2a7f62;
+                background-color: #2a7f62;
+                color: white;
+                margin-left: 10px;
+                margin-top: 10px;
+            }
+
+            /* burger button */
+        }
+
+        @media(min-width:993px) {
+            #mobileMenuBtn {
+                display: none !important;
             }
         }
     </style>
 </head>
 
 <body>
+    <!-- MOBILE HAMBURGER BUTTON -->
+    <button id="mobileMenuBtn" class="btn btn-light d-md-none"><i class="bi bi-list fs-3"></i></button>
 
-    <!-- Sidebar -->
+    <!-- SIDEBAR -->
     <div id="sidebar">
-        <button class="btn btn-sm btn-outline-light mb-3 ms-3" id="toggleSidebar"><i class="bi bi-list"></i></button>
+
+        <!-- Desktop collapse button -->
+        <button class="btn btn-sm btn-outline-light mb-3 ms-3 d-none d-md-block" id="toggleSidebar">
+            <i class="bi bi-list"></i>
+        </button>
+
         <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a href="volunteer_dashboard.php" class="nav-link"><i class="bi bi-house"></i><span class="text">Dashboard</span></a></li>
-            <li class="nav-item"><a href="volunteer_profile.php" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
-            <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+            <li class="nav-item"><a href="volunteer_dashboard.php" class="nav-link"><i class="bi bi-house"></i> <span class="text">Home</span></a></li>
+            <li class="nav-item"><a href="volunteer_profile.php" class="nav-link"><i class="bi bi-person"></i> <span class="text">Profile</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i> <span class="text">Settings</span></a></li>
+            <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> <span class="text">Logout</span></a></li>
         </ul>
     </div>
 
+    <!-- OVERLAY -->
+    <div id="overlay"></div>
     <!-- Main Content -->
     <div id="content">
-
         <!-- Header -->
         <div class="d-flex align-items-center mb-3 p-4 bg-white rounded shadow-sm dashboard-header"
             style="border-left: 6px solid #1f4f3c;">
             <div class="me-4">
-                <img src="data:image/jpeg;base64,<?= base64_encode($volunteer['profile_image']) ?>"
-                    alt="Profile"
+                <img src="data:image/jpeg;base64,<?= base64_encode($volunteer['profile_image']) ?>" alt="Profile"
                     class="rounded-circle shadow-sm"
                     style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #1f4f3c;">
             </div>
@@ -212,118 +351,147 @@ $assignedRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Assigned Requests Table -->
         <div class="card p-3">
             <h5>Your Assignment</h5>
-            <table id="assignedRequestsTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Requester</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                        <th>Requested At</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($assignedRequests): ?>
-                        <?php foreach ($assignedRequests as $req): ?>
-                            <tr>
-                                <td><?= $req['id'] ?></td>
-                                <td><?= htmlspecialchars($req['first_name'] . ' ' . $req['last_name']) ?></td>
-                                <td><?= htmlspecialchars($req['request_type']) ?></td>
-                                <td><?= htmlspecialchars($req['description']) ?></td>
-                                <td><?= htmlspecialchars($req['location']) ?></td>
-                                <td>
-                                    <?php if ($req['status'] === 'for_elders_approval'): ?>
-                                        <span class="badge bg-secondary">FOR ELDERS APPROVAL</span>
-                                    <?php elseif ($req['status'] === 'pending'): ?>
-                                        <span class="badge bg-warning text-dark">PENDING</span>
-                                    <?php elseif ($req['status'] === 'in_progress'): ?>
-                                        <span class="badge bg-info text-dark">IN PROGRESS</span>
-                                    <?php elseif ($req['status'] === 'completed'): ?>
-                                        <span class="badge bg-success">COMPLETED</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-secondary">UNKNOWN</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= date('Y-m-d H:i', strtotime($req['requested_at'])) ?></td>
-                                <td>
-                                    <?php if ($req['status'] !== 'for_elders_approval'): ?>
-                                        <button class="btn btn-sm btn-success finish-btn" data-id="<?= $req['id'] ?>">Finish</button>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+            <div class="table-responsive">
+                <table id="assignedRequestsTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                    <thead>
                         <tr>
-                            <td colspan="8" class="text-center">No requests assigned yet</td>
+                            <th>ID</th>
+                            <th>Requester</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Requested At</th>
+                            <th>Action</th>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php if ($assignedRequests): ?>
+                            <?php foreach ($assignedRequests as $req): ?>
+                                <tr>
+                                    <td><?= $req['id'] ?></td>
+                                    <td><?= htmlspecialchars($req['first_name'] . ' ' . $req['last_name']) ?></td>
+                                    <td><?= htmlspecialchars($req['request_type']) ?></td>
+                                    <td><?= htmlspecialchars($req['description']) ?></td>
+                                    <td><?= htmlspecialchars($req['location']) ?></td>
+                                    <td>
+                                        <?php if ($req['status'] === 'for_elders_approval'): ?>
+                                            <span class="badge bg-secondary">FOR ELDERS APPROVAL</span>
+                                        <?php elseif ($req['status'] === 'pending'): ?>
+                                            <span class="badge bg-warning text-dark">PENDING</span>
+                                        <?php elseif ($req['status'] === 'in_progress'): ?>
+                                            <span class="badge bg-info text-dark">IN PROGRESS</span>
+                                        <?php elseif ($req['status'] === 'completed'): ?>
+                                            <span class="badge bg-success">COMPLETED</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-secondary">UNKNOWN</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= date('Y-m-d H:i', strtotime($req['requested_at'])) ?></td>
+                                    <td>
+                                        <?php
+                                        if ($req['status'] === 'completed') {
+                                            echo "<span class='text-success fw-bold'>Completed</span>";
+                                        } elseif ($req['status'] === 'for_elders_approval') {
+                                            echo "<span class='badge bg-secondary'>FOR ELDERS APPROVAL</span>";
+                                        } else {
+                                            // Only show finish button when NOT completed and NOT for approval
+                                            echo '<button class="btn btn-sm btn-success finish-btn" data-id="' . $req['id'] . '">Finish</button>';
+                                        }
+                                        ?>
+                                    </td>
+
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="8" class="text-center">No requests assigned yet</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
 
     </div>
 
     <script>
-        let assignedTable;
-
         $(document).ready(function() {
-            assignedTable = $('#assignedRequestsTable').DataTable({
+            // DataTable init
+            let assignedTable = $('#assignedRequestsTable').DataTable({
                 responsive: true,
                 pageLength: 10,
                 lengthMenu: [5, 10, 25, 50],
-                order: [[0, 'desc']],
+                order: [
+                    [0, 'desc']
+                ],
                 language: {
                     search: "_INPUT_",
                     searchPlaceholder: "Search requests..."
                 }
             });
 
-            // Sidebar toggle
+            // Desktop sidebar toggle
             $('#toggleSidebar').click(function() {
                 $('#sidebar').toggleClass('collapsed');
                 $('#content').toggleClass('expanded');
             });
-        });
 
-        // Handle Finish button click
-        $(document).on("click", ".finish-btn", function() {
-            let button = $(this);
-            let requestId = button.data("id");
-
-            $.ajax({
-                url: "update_status.php",
-                method: "POST",
-                data: { request_id: requestId },
-                success: function(response) {
-                    try {
-                        let res = JSON.parse(response);
-
-                        if (res.success) {
-                            let row = button.closest('tr');
-                            if (row.hasClass('child')) row = row.prev();
-                            assignedTable.row(row).remove().draw(false);
-
-                            // Update stats dynamically
-                            let inProgress = parseInt($('#stat-inprogress').text());
-                            let inProgress2 = parseInt($('#stat-inprogress2').text());
-                            let completed = parseInt($('#stat-completed').text());
-
-                            $('#stat-inprogress').text(inProgress - 1);
-                            $('#stat-inprogress2').text(inProgress2 - 1);
-                            $('#stat-completed').text(completed + 1);
-
-                        } else {
-                            alert("Error: " + res.message);
-                        }
-                    } catch (e) {
-                        console.error("Invalid JSON:", response);
-                    }
-                }
+            // Mobile sidebar toggle
+            $('#mobileMenuBtn').click(function() {
+                $('#sidebar').addClass('open');
+                $('#overlay').addClass('show');
             });
+
+            // Close mobile sidebar
+            $('#overlay').click(function() {
+                $('#sidebar').removeClass('open');
+                $(this).removeClass('show');
+            });
+
+            
         });
+
+        // Finish button
+            $(document).on("click", ".finish-btn", function() {
+                let button = $(this);
+                let requestId = button.data("id");
+
+                $.ajax({
+                    url: "update_status.php",
+                    method: "POST",
+                    data: {
+                        request_id: requestId
+                    },
+                    success: function(response) {
+                        try {
+                            let res = JSON.parse(response);
+                            if (res.success) {
+                                let row = button.closest('tr');
+                                if (row.hasClass('child')) row = row.prev();
+                                assignedTable.row(row).remove().draw(false);
+
+                                // Update stats dynamically
+                                let inProgress = parseInt($('#stat-inprogress').text());
+                                let inProgress2 = parseInt($('#stat-inprogress2').text());
+                                let completed = parseInt($('#stat-completed').text());
+
+                                $('#stat-inprogress').text(inProgress - 1);
+                                $('#stat-inprogress2').text(inProgress2 - 1);
+                                $('#stat-completed').text(completed + 1);
+
+                                location.reload();
+                            } else {
+                                alert("Error: " + res.message);
+                            }
+                        } catch (e) {
+                            console.error("Invalid JSON:", response);
+                        }
+                    }
+                });
+            });
     </script>
 </body>
+
 </html>

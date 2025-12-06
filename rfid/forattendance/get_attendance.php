@@ -8,13 +8,28 @@ if ($conn->connect_error) {
     exit;
 }
 
-// this fetch all attendance records
-$sql = "SELECT * FROM attendance_records ORDER BY time_in DESC";
+// Fetch all attendance records with user info
+$sql = "
+    SELECT a.id, a.card_id, a.time_in, a.time_out, 
+           u.name, u.address, u.age, u.image
+    FROM attendance_records a
+    LEFT JOIN user_rfid u ON a.card_id = u.card_id
+    ORDER BY a.time_in DESC
+";
 $result = $conn->query($sql);
 
 $attendanceData = [];
 while ($row = $result->fetch_assoc()) {
-    $attendanceData[] = $row;
+    $attendanceData[] = [
+        "id" => $row["id"],
+        "card_id" => $row["card_id"],
+        "name" => $row["name"],
+        "address" => $row["address"],
+        "age" => $row["age"],
+        "image" => $row["image"],
+        "time_in" => $row["time_in"],
+        "time_out" => $row["time_out"] ? $row["time_out"] : "-"
+    ];
 }
 
 echo json_encode(["success" => true, "data" => $attendanceData]);

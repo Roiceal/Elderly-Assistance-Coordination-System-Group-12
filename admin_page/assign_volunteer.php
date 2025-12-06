@@ -17,6 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'], $_POST[
     $stmt = $pdo->prepare("UPDATE assistance_requests SET assigned_volunteer_id = ?, status = 'in_progress' WHERE id = ?");
     $stmt->execute([$volunteer_id, $request_id]);
     $message = "Request ID $request_id assigned successfully.";
+
+    $admin_id = $_SESSION['admin_id'];
+    $activity = "Admin Assigned volunteer ID $volunteer_id to request ID $request_id";
+
+    $stmt = $pdo->prepare("INSERT INTO activity_logs (admin_id, activity, ip_address, user_agent) 
+                       VALUES (?, ?, ?, ?)");
+    $stmt->execute([
+        $admin_id,
+        $activity,
+        $_SERVER['REMOTE_ADDR'],
+        $_SERVER['HTTP_USER_AGENT']
+    ]);
 }
 
 // Fetch all pending assistance requests
@@ -165,7 +177,6 @@ $volunteers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <li class="nav-item"><a href="map/location_map.php" class="nav-link"><i class="bi bi-geo-alt-fill"></i><span class="text">Locate Elder</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-list-check"></i><span class="text">Volunteer Assignment</span></a></li>
             <li class="nav-item"><a href="make_announcement.php" class="nav-link"><i class="bi bi-megaphone-fill"></i><span class="text">Announcement</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear-fill"></i><span class="text">Settings</span></a></li>
             <li class="nav-item"><a href="../rfid/" class="nav-link"><i class="bi bi-person-badge-fill"></i><span class="text">Attendance</span></a></li>
             <li class="nav-item"><a href="../logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
         </ul>

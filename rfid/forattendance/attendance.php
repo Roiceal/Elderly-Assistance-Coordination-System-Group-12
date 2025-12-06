@@ -2,14 +2,14 @@
 header('Content-Type: application/json');
 date_default_timezone_set('Asia/Manila');
 
-// db connection
+// DB connection
 $conn = new mysqli("localhost", "root", "", "elderlyassistancecoordinationdb");
 if ($conn->connect_error) {
     echo json_encode(["success" => false, "message" => "DB connection failed"]);
     exit;
 }
 
-// stop if no RFID is provided
+// Stop if no RFID provided
 if (!isset($_POST['rfid'])) {
     echo json_encode(["success" => false, "message" => "No RFID received"]);
     exit;
@@ -17,8 +17,8 @@ if (!isset($_POST['rfid'])) {
 
 $rfid = $_POST['rfid'];
 
-// check if the rfid exists in the user table
-$sql = "SELECT * FROM user WHERE card_id = ?";
+// Check if RFID exists in user_rfid table
+$sql = "SELECT * FROM user_rfid WHERE card_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $rfid);
 $stmt->execute();
@@ -27,9 +27,11 @@ $userResult = $stmt->get_result();
 if ($user = $userResult->fetch_assoc()) {
     $name = $user["name"];
     $address = $user["address"];
+    $age = $user["age"];
+    $image = $user["image"];
     $currentTime = date("Y-m-d h:i:s A");
 
-    // get the last attendance record for this user
+    // Get the last attendance record for this card
     $checkSql = "SELECT * FROM attendance_records WHERE card_id = ? ORDER BY id DESC LIMIT 1";
     $checkStmt = $conn->prepare($checkSql);
     $checkStmt->bind_param("s", $rfid);
@@ -39,7 +41,7 @@ if ($user = $userResult->fetch_assoc()) {
 
     if ($lastRecord) {
         if (is_null($lastRecord['time_out'])) {
-            // user is currently checked in if so, check them out
+            // User is currently checked in → check them out
             $updateStmt = $conn->prepare("UPDATE attendance_records SET time_out = ? WHERE id = ?");
             $updateStmt->bind_param("si", $currentTime, $lastRecord["id"]);
             $updateStmt->execute();
@@ -50,19 +52,21 @@ if ($user = $userResult->fetch_assoc()) {
                 "name" => $lastRecord["name"],
                 "card_id" => $rfid,
                 "address" => $lastRecord["address"],
+                "age" => $age,
+                "image" => $image,
                 "time_in" => $lastRecord["time_in"],
                 "time_out" => $currentTime,
                 "message" => "Checked out successfully!"
             ]);
         } else {
-            // user already checked out if so, show message
+            // Already checked out
             echo json_encode([
                 "success" => false,
                 "message" => "You have already checked out."
             ]);
         }
     } else {
-        // no previous record if so, check them in
+        // No previous record → check in
         $insertStmt = $conn->prepare("INSERT INTO attendance_records (card_id, name, address, time_in) VALUES (?, ?, ?, ?)");
         $insertStmt->bind_param("ssss", $rfid, $name, $address, $currentTime);
         $insertStmt->execute();
@@ -73,6 +77,8 @@ if ($user = $userResult->fetch_assoc()) {
             "name" => $name,
             "card_id" => $rfid,
             "address" => $address,
+            "age" => $age,
+            "image" => $image,
             "time_in" => $currentTime,
             "time_out" => "-",
             "message" => "Checked in successfully!"

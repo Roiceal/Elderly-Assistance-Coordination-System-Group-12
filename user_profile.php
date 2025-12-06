@@ -9,20 +9,12 @@ if (!isset($user_id)) {
     exit();
 }
 
-
 include 'db_connect.php';
 
 // Fetch logged-in user info
 $stmt = $pdo->prepare("SELECT first_name, last_name, username, phone, profile_image FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// // Prepare profile image
-// $profileImg = 'images/profile_placeholder.png'; // fallback
-
-// if (!empty($user['profile_image']) && file_exists(__DIR__ . '/' . $user['profile_image'])) {
-//     $profileImg = $user['profile_image']; // use relative path stored in DB
-// }
 
 // Fetch all assistance requests
 $stmt2 = $pdo->prepare("
@@ -46,22 +38,45 @@ $requests = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        /* Your previous styles remain unchanged */
         body {
             font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
             overflow-x: hidden;
-            margin: 0;
+            transition: all 0.2s ease-in-out;
         }
 
+        body.high-contrast {
+            background: black;
+            color: white;
+        }
+
+        body.high-contrast a {
+            color: yellow;
+        }
+
+        body.high-contrast .card {
+            background: #333;
+            color: white;
+        }
+
+        body.high-contrast .btn {
+            background-color: #555;
+            color: white;
+        }
+
+
+        /* SIDEBAR */
         #sidebar {
             width: 250px;
             background: #1f4f3c;
             color: #fff;
+            transition: 0.3s ease;
             position: fixed;
             height: 100vh;
             padding-top: 20px;
-            transition: 0.3s;
+            z-index: 5000;
+            /* FIX: should be above header */
+            left: 0;
         }
 
         #sidebar.collapsed {
@@ -86,6 +101,69 @@ $requests = $stmt2->fetchAll(PDO::FETCH_ASSOC);
         #sidebar.collapsed .text {
             display: none;
         }
+
+        /* CONTENT */
+        #content {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+        }
+
+        #content.expanded {
+            margin-left: 70px;
+        }
+
+        /* MOBILE SIDEBAR FIX */
+        @media (max-width: 992px) {
+
+            #sidebar {
+                width: 260px !important;
+                position: fixed;
+                /* REQUIRED */
+                top: 0;
+                /* REQUIRED */
+                left: 0;
+                transform: translateX(-260px);
+                height: 100vh;
+                /* Ensures full screen sidebar */
+                backdrop-filter: blur(12px);
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+                z-index: 5000;
+            }
+
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #sidebar .text {
+                display: inline !important;
+            }
+
+            #overlay {
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(3px);
+                top: 0;
+                left: 0;
+                z-index: 4000;
+            }
+
+            #overlay.show {
+                display: block;
+            }
+
+            #content {
+                margin-left: 0 !important;
+            }
+        }
+
+
+
+        /* NAVIGATIOn */
 
         #content {
             margin-left: 250px;
@@ -170,11 +248,31 @@ $requests = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             transform: translateY(-5px);
         }
 
+        .btn {
+            background-color: #2a7f62;
+            border: none;
+        }
+
         .btn-primary {
             background-color: #2a7f62;
             color: white;
             border: none;
         }
+
+        /* burger button */
+        #mobileMenuBtn {
+            border: solid 2px #2a7f62;
+            background-color: white;
+            color: black;
+        }
+
+        #mobileMenuBtn:hover {
+            border: solid 2px #2a7f62;
+            background-color: #2a7f62;
+            color: white;
+        }
+
+        /* burger button */
 
         @media (max-width: 768px) {
 
@@ -193,19 +291,27 @@ $requests = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 
-<body>
+<body class="<?= $high_contrast ? 'high-contrast' : '' ?>" style="font-size: <?= $font_size ?>;">
 
-    <!-- Sidebar -->
-    <div id="sidebar" class="d-none d-md-block">
-        <button class="btn btn-sm btn-outline-light mb-3 ms-3" id="toggleSidebar"><i class="bi bi-list"></i></button>
+    <!-- MOBILE HAMBURGER -->
+    <button id="mobileMenuBtn" class="btn btn-light d-md-none" style="z-index: 3000;margin-left:10px;margin-top:10px;">
+        <i class="bi bi-list fs-3"></i>
+    </button>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+        <button class="btn btn-sm btn-outline-light mb-3 ms-3 d-none d-md-block" id="toggleSidebar"><i class="bi bi-list"></i></button>
         <ul class="nav flex-column mt-3">
-            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i><span class="text">Home</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-person"></i><span class="text">Profile</span></a></li>
-            <li class="nav-item"><a href="events.php" class="nav-link"><i class="bi bi-calendar-event"></i><span class="text">Events</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i><span class="text">Settings</span></a></li>
-            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i><span class="text">Logout</span></a></li>
+            <li class="nav-item"><a href="dashboard_elders.php" class="nav-link"><i class="bi bi-house"></i> <span class="text">Home</span></a></li>
+            <li class="nav-item"><a href="user_profile.php" class="nav-link"><i class="bi bi-person"></i> <span class="text">Profile</span></a></li>
+            <li class="nav-item"><a href="all_events.php" class="nav-link"><i class="bi bi-calendar-event"></i> <span class="text">Events</span></a></li>
+            <li class="nav-item"><a href="settings.php" class="nav-link"><i class="bi bi-gear"></i> <span class="text">Settings</span></a></li>
+            <li class="nav-item"><a href="logout.php" class="nav-link"><i class="bi bi-box-arrow-right"></i> <span class="text">Logout</span></a></li>
         </ul>
     </div>
+
+    <!-- OVERLAY -->
+    <div id="overlay"></div>
 
     <!-- Content -->
     <div id="content">
@@ -229,9 +335,6 @@ $requests = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab">Activity</button>
             </li>
-            <!-- <li class="nav-item" role="presentation">
-                <button class="nav-link" id="health-tab" data-bs-toggle="tab" data-bs-target="#health" type="button" role="tab">Health Logs</button>
-            </li> -->
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests" type="button" role="tab">Requests</button>
             </li>
@@ -240,9 +343,6 @@ $requests = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             <div class="tab-pane fade show active" id="activity" role="tabpanel">
                 <p>Recent activities and logins will appear here.</p>
             </div>
-            <!-- <div class="tab-pane fade" id="health" role="tabpanel">
-                <p>Health records, exercise routines, and diet logs will appear here.</p>
-            </div> -->
             <div class="tab-pane fade" id="requests" role="tabpanel">
                 <div class="p-4 bg-white rounded shadow-sm">
                     <h4 class="fw-bold">All Assistance Requests</h4>
@@ -305,35 +405,74 @@ $requests = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     <script>
         document.getElementById('getLoc').addEventListener('click', () => {
             const status = document.getElementById('status');
+
             if (!navigator.geolocation) {
-                status.textContent = 'Geolocation not supported.';
+                status.textContent = 'Geolocation not supported by your browser.';
                 return;
             }
+
             status.textContent = 'Requesting permission...';
-            navigator.geolocation.getCurrentPosition(pos => {
 
-                fetch('admin_page/map/save_location.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            latitude: pos.coords.latitude,
-                            longitude: pos.coords.longitude,
-                            accuracy: pos.coords.accuracy
+            navigator.geolocation.getCurrentPosition(
+                pos => {
+                    fetch('admin_page/map/save_location.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                latitude: pos.coords.latitude,
+                                longitude: pos.coords.longitude,
+                                accuracy: pos.coords.accuracy
+                            })
                         })
-                    })
-                    .then(r => r.text())
-                    .then(txt => {
-                        console.log("RAW RESPONSE:", txt);
-                        status.textContent = "Location saved!";
-                    });
+                        .then(r => r.text())
+                        .then(txt => {
+                            console.log("RAW RESPONSE:", txt);
+                            status.textContent = "Location saved!";
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            status.textContent = "Error saving location!";
+                        });
+                },
+                err => {
+                    console.error(err);
+                    switch (err.code) {
+                        case err.PERMISSION_DENIED:
+                            status.textContent = "Permission denied. Please allow location access.";
+                            break;
+                        case err.POSITION_UNAVAILABLE:
+                            status.textContent = "Location unavailable.";
+                            break;
+                        case err.TIMEOUT:
+                            status.textContent = "Request timed out. Try again.";
+                            break;
+                        default:
+                            status.textContent = "Error: " + err.message;
+                    }
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        });
 
-            }, err => {
-                status.textContent = 'Error: ' + err.message;
-            }, {
-                enableHighAccuracy: true
-            });
+
+        // Mobile menu
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+
+        mobileMenuBtn.addEventListener("click", () => {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+        });
+
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
         });
 
         document.getElementById("toggleSidebar").addEventListener("click", () => {
@@ -341,6 +480,48 @@ $requests = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             const content = document.getElementById("content");
             sidebar.classList.toggle("collapsed");
             content.classList.toggle("expanded");
+        });
+
+        // ------------------- Accessibility -------------------
+        function getCookie(name) {
+            let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            if (match) return match[2];
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            let d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + "=" + value + ";expires=" + d.toUTCString() + ";path=/";
+        }
+
+        function adjustFontSize(action) {
+            let currentSize = parseInt(window.getComputedStyle(document.body).fontSize);
+            if (action === 'increase') currentSize += 2;
+            else if (action === 'decrease') currentSize = Math.max(12, currentSize - 2);
+
+            // Apply font size to all elements including sidebar
+            document.querySelectorAll('body, #content, #sidebar, #content *, #sidebar *').forEach(el => {
+                el.style.fontSize = currentSize + 'px';
+            });
+
+            setCookie('font_size', currentSize + 'px', 30);
+        }
+
+        function toggleContrast() {
+            document.body.classList.toggle('high-contrast');
+            setCookie('high_contrast', document.body.classList.contains('high-contrast') ? 1 : 0, 30);
+        }
+
+        // Apply saved preferences
+        window.addEventListener('DOMContentLoaded', () => {
+            const fontSize = getCookie('font_size');
+            const highContrast = getCookie('high_contrast');
+
+            if (fontSize) {
+                document.querySelectorAll('body, #content, #sidebar, #content *, #sidebar *').forEach(el => el.style.fontSize = fontSize);
+            }
+            if (highContrast === '1') document.body.classList.add('high-contrast');
         });
     </script>
 </body>
