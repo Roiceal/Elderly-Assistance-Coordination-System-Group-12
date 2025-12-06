@@ -100,6 +100,17 @@ if ($admin && $role === 'Admin' && $admin['password'] === $password) {
     $_SESSION['phone'] = $user['phone'];
     $_SESSION['username'] = $user['username'];
 
+    if (isset($_POST['remember'])) {
+        // Set cookies for 30 days
+        setcookie("remember_username", $username, time() + (86400 * 30), "/");
+        setcookie("remember_role", $role, time() + (86400 * 30), "/");
+    } else {
+        // Clear cookies if unchecked
+        setcookie("remember_username", "", time() - 3600, "/");
+        setcookie("remember_role", "", time() - 3600, "/");
+    }
+
+
     echo '<!DOCTYPE html>
 <html lang="en">
 <head>

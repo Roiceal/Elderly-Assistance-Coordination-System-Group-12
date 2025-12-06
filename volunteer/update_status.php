@@ -1,15 +1,18 @@
 <?php
 session_start();
 include __DIR__ . '/../db_connect.php';
+header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
-    
-    $requestId = $_POST['request_id'];
-
-    $stmt = $pdo->prepare("UPDATE assistance_requests SET status = 'completed' WHERE id = ?");
-    $stmt->execute([$requestId]);
-
-    header("Location: volunteer_dashboard.php");
-    exit();
+if (!isset($_POST['request_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Missing request ID']);
+    exit;
 }
+
+$request_id = $_POST['request_id'];
+
+$stmt = $pdo->prepare("UPDATE assistance_requests SET status = 'for_elders_approval' WHERE id = ?");
+$success = $stmt->execute([$request_id]);
+
+echo json_encode(['success' => $success]);
 ?>
+

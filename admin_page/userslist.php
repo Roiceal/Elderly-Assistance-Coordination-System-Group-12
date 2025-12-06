@@ -195,6 +195,13 @@ $vol = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- ACTIVITY TAB -->
         <div class="tab-pane fade show active" id="activity" role="tabpanel">
 
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0"></h5>
+            <a href="add_elder.php" class="btn btn-success">
+              <i class="bi bi-plus-circle"></i> Add Elder
+            </a>
+          </div>
+
           <table id="usersTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
             <thead>
               <tr>
@@ -231,6 +238,13 @@ $vol = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- VOLUNTEER TAB -->
         <div class="tab-pane fade" id="volunteers" role="tabpanel">
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0"></h5>
+            <a href="add_elder.php" class="btn btn-success">
+              <i class="bi bi-plus-circle"></i> Add Volunteer
+            </a>
+          </div>
 
           <table id="volunteerTable" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
             <thead>

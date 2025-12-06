@@ -4,10 +4,10 @@ session_start();
 if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['phone'])) {
   header("location:dashboard_elders.php");
   exit();
-}else if (isset($_SESSION['volunteer_id']) && isset($_SESSION['volunteer_username']) && isset($_SESSION['volunteer_phone'])) {
+} else if (isset($_SESSION['volunteer_id']) && isset($_SESSION['volunteer_username']) && isset($_SESSION['volunteer_phone'])) {
   header("location:volunteer/volunteer_dashboard.php");
   exit();
-}else if (isset($_SESSION['admin_id']) && isset($_SESSION['admin_username'])) {
+} else if (isset($_SESSION['admin_id']) && isset($_SESSION['admin_username'])) {
   header("location:admin_page/admin.php");
   exit();
 }
@@ -15,10 +15,13 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -46,7 +49,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
     }
 
     .title {
-      color: #1f4f3c ;
+      color: #1f4f3c;
       font-weight: bold;
     }
 
@@ -59,24 +62,23 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
     }
 
     h2 {
-      color: #1f4f3c ;
+      color: #1f4f3c;
       font-weight: bold;
     }
 
-    .btn{
-      background-color: #2a7f62 ;
+    .btn {
+      background-color: #2a7f62;
       border: none;
     }
-    .btn:hover{
-      background-color: #1f4f3c ;
+
+    .btn:hover {
+      background-color: #1f4f3c;
     }
 
-    a{
+    a {
       text-decoration: none;
-      color: #2a7f62 ;
+      color: #2a7f62;
     }
-
-    
   </style>
 </head>
 
@@ -119,10 +121,10 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <input type="checkbox" class="form-check-input" name="remember" id="rememberMe">
                     <label class="form-check-label" for="rememberMe">Remember me</label>
                   </div>
-                  <a href="#" >Forgot password?</a>
+                  <a href="#" onclick="forgotPassword()">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 mb-3 ">Login</button>
@@ -142,12 +144,76 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
     </div>
   </div>
   <script>
+    function forgotPassword() {
+      Swal.fire({
+        title: "Reset Password",
+        input: "text",
+        inputLabel: "Enter your username or phone number",
+        inputPlaceholder: "username or phone...",
+        showCancelButton: true,
+        confirmButtonText: "Submit",
+        cancelButtonText: "Cancel",
+        preConfirm: (value) => {
+          if (!value) {
+            Swal.showValidationMessage("Please enter something");
+          }
+          return value;
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Send value to backend
+          fetch("forgot_password_process.php", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              body: "identifier=" + encodeURIComponent(result.value)
+            })
+            .then(res => res.json())
+            .then(data => {
+
+              Swal.fire({
+                icon: data.status,
+                title: data.title,
+                text: data.message
+              });
+            });
+        }
+      });
+    }
+
+
     document.addEventListener("DOMContentLoaded", function() {
-      if (!window.localStorage.getItem("page_refreshed_once")) {
-        window.localStorage.setItem("page_refreshed_once", "true");
-        window.location.reload();
+
+      // Page refresh logic
+      if (!localStorage.getItem("page_refreshed_once")) {
+        localStorage.setItem("page_refreshed_once", "true");
+        location.reload();
+        return;
+      }
+
+      // Remember me: Fill saved username + role
+      let savedUser = getCookie("remember_username");
+      let savedRole = getCookie("remember_role");
+
+      if (savedUser) {
+        document.getElementById("username").value = savedUser;
+        document.getElementById("rememberMe").checked = true;
+      }
+
+      if (savedRole) {
+        document.getElementById("role").value = savedRole;
       }
     });
+
+    function getCookie(name) {
+      let cookieArr = document.cookie.split("; ");
+      for (let cookie of cookieArr) {
+        let parts = cookie.split("=");
+        if (parts[0] === name) return parts[1];
+      }
+      return null;
+    }
   </script>
 
 

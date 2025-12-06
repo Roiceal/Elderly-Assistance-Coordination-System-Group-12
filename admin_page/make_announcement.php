@@ -47,7 +47,7 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <style>
         body {
-           font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: whitesmoke;
             color: black;
         }
@@ -149,42 +149,83 @@ $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-            <div class="card shadow-lg p-4" style="width: 450px; border-radius: 15px;">
+        <div class="container">
+            <h5 class="mb-3 fw-bold"></h5>
 
-                <h3 class="text-center mb-4">📩 Send Announcement Message</h3>
+            <!-- TABS -->
+            <ul class="nav nav-tabs mb-3" id="announcementTabs" role="tablist">
 
-                <!-- <form action="../send_message/send_sms.php" method="POST">
-
-
-
-                  
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Message</label>
-                        <textarea name="message" class="form-control" rows="4" placeholder="Type your message..." required></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100 py-2">
-                        Send Message
+                <!-- ANNOUNCEMENT BY TEXT -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active"
+                        id="text-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#announcement_text"
+                        type="button" role="tab">
+                        Announcement by Text
                     </button>
+                </li>
 
-                </form> -->
+                <!-- ANNOUNCEMENT BY WEBSITE -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link"
+                        id="website-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#announcement_website"
+                        type="button" role="tab">
+                        Announcement by Website
+                    </button>
+                </li>
+            </ul>
 
-                <form action="../send_message/send_sms.php" method="POST"> <!-- Category Selector -->
-                    <div class="mb-3"> <label class="form-label fw-semibold">Send To</label> <select name="category" class="form-select" required>
-                            <option value="" disabled selected>Select category</option>
+            <!-- TAB CONTENT -->
+            <div class="tab-content" id="announcementTabsContent">
+
+                <!-- TAB CONTENT: ANNOUNCEMENT BY TEXT -->
+                <div class="tab-pane fade show active p-3 bg-white border rounded"
+                    id="announcement_text" role="tabpanel">
+
+                    <h6 class="fw-bold mb-3">Send SMS Announcement</h6>
+                    <form action="../send_message/send_sms.php" method="POST">
+                        <label class="form-label">Select Category:</label>
+                        <select name="category" class="form-select mb-3" required>
+                            <option disabled selected>Select Category</option>
                             <option value="elders">Elders</option>
                             <option value="volunteers">Volunteers</option>
                             <option value="admin">Admin</option>
-                        </select> </div> <!-- Message -->
-                    <div class="mb-3"> <label class="form-label fw-semibold">Message</label> <textarea name="message" class="form-control" rows="4" placeholder="Type your message..." required></textarea> </div> <button type="submit" class="btn btn-primary w-100 py-2">Send Message</button>
-                </form>
+                            <option value="all">All (Admins, Elders, Volunteers)</option>
+                        </select>
+
+                        <label class="form-label">Message:</label>
+                        <textarea name="message" class="form-control mb-3" rows="4" required></textarea>
+
+                        <button type="submit" class="btn btn-success w-100">Send SMS</button>
+                    </form>
+                </div>
+
+                <!-- TAB CONTENT: ANNOUNCEMENT BY WEBSITE -->
+                <div class="tab-pane fade p-3 bg-white border rounded"
+                    id="announcement_website" role="tabpanel">
+
+                    <h6 class="fw-bold mb-3">Post Announcement on Website</h6>
+
+                    <form action="post_announcement.php" method="POST">
+
+                        <label class="form-label">Announcement Title:</label>
+                        <input type="text" name="title" class="form-control mb-3" required>
+
+                        <label class="form-label">Content:</label>
+                        <textarea name="content" class="form-control mb-3" rows="5" required></textarea>
+
+                        <label class="form-label">Date of Event:</label>
+                        <input type="date" name="date_of_event" class="form-control mb-3">
+
+                        <button type="submit" class="btn btn-primary w-100">Post Announcement</button>
+                    </form>
+                </div>
 
             </div>
         </div>
-
-
-
     </div>
 
     <!-- JS -->

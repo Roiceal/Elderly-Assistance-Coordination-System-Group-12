@@ -17,22 +17,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Category and message are required.");
     }
 
-    // Determine table to fetch recipients
     switch ($category) {
         case 'elders':
             $stmt = $pdo->query("SELECT phone FROM users WHERE phone IS NOT NULL");
             break;
+
         case 'volunteers':
             $stmt = $pdo->query("SELECT phone FROM volunteers WHERE phone IS NOT NULL");
             break;
+
         case 'admin':
             $stmt = $pdo->query("SELECT phone FROM admins WHERE phone IS NOT NULL");
             break;
+
+        case 'all':
+            $phones = [];
+
+            $stmt1 = $pdo->query("SELECT phone FROM users WHERE phone IS NOT NULL");
+            $stmt2 = $pdo->query("SELECT phone FROM volunteers WHERE phone IS NOT NULL");
+            $stmt3 = $pdo->query("SELECT phone FROM admins WHERE phone IS NOT NULL");
+
+            $phones1 = $stmt1->fetchAll(PDO::FETCH_COLUMN);
+            $phones2 = $stmt2->fetchAll(PDO::FETCH_COLUMN);
+            $phones3 = $stmt3->fetchAll(PDO::FETCH_COLUMN);
+
+            $phones = array_unique(array_merge($phones1, $phones2, $phones3));
+            break;
+
         default:
             die("Invalid category selected.");
     }
 
-    $phones = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    if ($category !== 'all') {
+        $phones = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
 
     if (!$phones) {
         die("No recipients found in this category.");
