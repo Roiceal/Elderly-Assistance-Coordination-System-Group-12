@@ -1,0 +1,246 @@
+/*Global Styles*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+}
+
+/*Navbar*/
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: rgb(202, 220, 174);
+  padding: 10px 20px;
+  height: 80px;
+  position: relative;
+  z-index: 2000;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-left .logo {
+  height: 64px;
+  width: auto;
+  border-radius: 30px;
+  position: absolute;
+  top: 6px;
+  left: 16px;
+  font-size: 20px;
+  padding-left: 12px;
+}
+
+
+.navbar h1 {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  white-space: nowrap;
+  margin: 0;
+  padding-top: 16px;
+}
+
+
+/*Hero Section*/
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: url('../images/Elderly.jpg') no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 80px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 50px;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.hero .btn {
+  display: inline-block;
+  padding: 6px 28px;
+  font-size: 18px;
+  background-color: rgb(202, 220, 174);
+  color: rgb(58, 58, 57);
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.2s;
+  margin: 5px;
+}
+
+.hero .btn:hover {
+  background-color: rgb(39, 193, 95);
+  color: white;
+  text-decoration: underline;
+}
+
+/*Footer*/
+.site-footer {
+  margin-top: 0;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; 
+  padding: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: rgb(240, 245, 231);
+}
+
+
+.footer-top div {
+  flex: 1 1 250px;
+  min-width: 200px;
+}
+
+.footer-logos {
+  padding-left: 8px;
+}
+
+ .footer-social { /* { eto yung inedit ko for scetioning ng footer */
+  text-align: right;
+  padding-right: 8px;
+  font-weight: normal; /* change to normal */
+  font-size: 18px;
+  text-align: justify;
+}
+
+
+
+.footer-bottom {
+  background: rgb(202, 220, 174);
+  padding: 26px;
+  text-align: center;
+  font-size: 16px;
+  height: 76px;
+}
+.footer-contact{
+  font-size: large;
+  text-align: justify;
+}
+.footer-contact h4 {
+font-weight: bold;
+}
+
+/*Cookie Consent */
+#cookieConsent {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(252, 236, 202);
+  color: rgb(0, 0, 0);
+  padding: 15px;
+  text-align: center;
+  z-index: 1000;
+}
+
+#cookieConsent button {
+  border: none;
+  background-color: #fff;
+  color: #333;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Responsive Styles*/
+@media (max-width: 768px) {
+  .navbar h1 {
+    font-size: 18px;
+    top: 8px;
+    right: 15px;
+    white-space: normal;
+    max-width: 50%;
+    text-align: right;
+  }
+
+  .nav-left .logo {
+    height: 40px;
+  }
+}
+
+@media (max-width: 575px) {
+  .navbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 15px;
+  }
+
+  .navbar h1 {
+    position: static;
+    text-align: center;
+    margin-top: 5px;
+    width: 100%;
+  }
+
+  .nav-left {
+    justify-content: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .hero {
+    padding: 30px 15px;
+  }
+
+  .hero h1 {
+    font-size: 1.4rem;
+  }
+
+  .hero .btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+
+  .footer-top {
+    text-align: center;
+  }
+
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+}
